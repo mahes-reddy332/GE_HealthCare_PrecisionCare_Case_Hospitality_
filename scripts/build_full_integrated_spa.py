@@ -1,4 +1,6 @@
-"use client"
+import os
+
+code = r'''"use client"
 
 import React, { useState, useEffect } from "react"
 import { 
@@ -1915,3 +1917,9 @@ export default function PatientFirstHospitality() {
     </div>
   )
 }
+'''
+
+target_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "frontend", "src", "components", "single-page-app.tsx"))
+with open(target_path, "w", encoding="utf-8") as f:
+    f.write(code)
+print(f"Successfully generated Full Dynamic Integration SPA to {target_path}")

@@ -19,11 +19,14 @@
     "emergency_available": true,
     "nabh_accredited": true,
     "specialties": [
-      "CAR",
-      "ORT",
-      "NEU",
-      "GAS",
-      "ONC"
+      "cardiology",
+      "icu",
+      "cath_lab",
+      "emergency",
+      "radiology",
+      "oncology",
+      "orthopedics",
+      "diagnostics"
     ],
     "empaneled_payers": [
       "STAR_HEALTH",
@@ -35,80 +38,65 @@
     "markup_multiplier": 1.25,
     "rooms": [
       {
-        "category": "GENERAL_WARD",
+        "category": "GENERAL",
         "name": "General Ward Bed",
-        "daily_tariff": 1875.0,
-        "description": "Multi-occupancy ward bed including nursing care and basic monitoring",
+        "daily_tariff": 2000.0,
+        "status": "COMPATIBLE",
+        "description": "Multi-occupancy ward",
         "data_status": "AUTHORITATIVE"
       },
       {
         "category": "SEMI_PRIVATE",
-        "name": "Semi-Private Room (Twin Sharing)",
-        "daily_tariff": 3750.0,
-        "description": "Two-bed shared room with partition, shared attached bathroom",
+        "name": "Semi-Private Room",
+        "daily_tariff": 4500.0,
+        "status": "COMPATIBLE",
+        "description": "Twin sharing room",
         "data_status": "AUTHORITATIVE"
       },
       {
-        "category": "PRIVATE_AC",
+        "category": "PRIVATE",
         "name": "Single Private A/C Room",
-        "daily_tariff": 5625.0,
-        "description": "Individual private air-conditioned room with attendant couch and private bathroom",
+        "daily_tariff": 8000.0,
+        "status": "EXCEEDS_CAP",
+        "description": "Private room",
         "data_status": "AUTHORITATIVE"
-      },
-      {
-        "category": "DELUXE",
-        "name": "Deluxe Suite",
-        "daily_tariff": 9375.0,
-        "description": "Executive suite with patient lounge, premium amenities, refrigerator",
-        "data_status": "SIMULATED"
       },
       {
         "category": "ICU",
         "name": "Intensive Care Unit (ICU)",
-        "daily_tariff": 6750.0,
-        "description": "Critical care bed with continuous hemodynamics, RMO, ventilator support",
+        "daily_tariff": 12000.0,
+        "status": "VERIFY",
+        "description": "Critical care ICU",
         "data_status": "AUTHORITATIVE"
       }
     ],
     "beds": [
       {
-        "category": "GENERAL_WARD",
-        "total_beds": 125,
-        "occupied_beds": 93,
-        "available_beds": 32,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
+        "category": "GENERAL",
+        "total_beds": 60,
+        "occupied_beds": 52,
+        "available_beds": 8,
         "data_status": "SIMULATED"
       },
       {
         "category": "SEMI_PRIVATE",
-        "total_beds": 62,
-        "occupied_beds": 53,
-        "available_beds": 9,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
+        "total_beds": 20,
+        "occupied_beds": 17,
+        "available_beds": 3,
         "data_status": "SIMULATED"
       },
       {
-        "category": "PRIVATE_AC",
-        "total_beds": 37,
-        "occupied_beds": 29,
-        "available_beds": 8,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
-        "data_status": "SIMULATED"
-      },
-      {
-        "category": "DELUXE",
-        "total_beds": 12,
-        "occupied_beds": 10,
+        "category": "PRIVATE",
+        "total_beds": 15,
+        "occupied_beds": 13,
         "available_beds": 2,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
         "data_status": "SIMULATED"
       },
       {
         "category": "ICU",
-        "total_beds": 45,
-        "occupied_beds": 41,
-        "available_beds": 4,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
+        "total_beds": 12,
+        "occupied_beds": 9,
+        "available_beds": 3,
         "data_status": "SIMULATED"
       }
     ]
@@ -133,11 +121,12 @@
     "emergency_available": true,
     "nabh_accredited": true,
     "specialties": [
-      "CAR",
-      "ORT",
-      "NEU",
-      "GAS",
-      "ONC"
+      "cardiology",
+      "icu",
+      "emergency",
+      "radiology",
+      "orthopedics",
+      "dialysis"
     ],
     "empaneled_payers": [
       "STAR_HEALTH",
@@ -149,80 +138,65 @@
     "markup_multiplier": 1.3,
     "rooms": [
       {
-        "category": "GENERAL_WARD",
+        "category": "GENERAL",
         "name": "General Ward Bed",
-        "daily_tariff": 1950.0,
-        "description": "Multi-occupancy ward bed including nursing care and basic monitoring",
+        "daily_tariff": 2200.0,
+        "status": "COMPATIBLE",
+        "description": "Multi-occupancy ward",
         "data_status": "AUTHORITATIVE"
       },
       {
         "category": "SEMI_PRIVATE",
-        "name": "Semi-Private Room (Twin Sharing)",
-        "daily_tariff": 3900.0,
-        "description": "Two-bed shared room with partition, shared attached bathroom",
+        "name": "Semi-Private Room",
+        "daily_tariff": 4800.0,
+        "status": "COMPATIBLE",
+        "description": "Twin sharing room",
         "data_status": "AUTHORITATIVE"
       },
       {
-        "category": "PRIVATE_AC",
+        "category": "PRIVATE",
         "name": "Single Private A/C Room",
-        "daily_tariff": 5850.0,
-        "description": "Individual private air-conditioned room with attendant couch and private bathroom",
+        "daily_tariff": 8500.0,
+        "status": "EXCEEDS_CAP",
+        "description": "Private room",
         "data_status": "AUTHORITATIVE"
-      },
-      {
-        "category": "DELUXE",
-        "name": "Deluxe Suite",
-        "daily_tariff": 9750.0,
-        "description": "Executive suite with patient lounge, premium amenities, refrigerator",
-        "data_status": "SIMULATED"
       },
       {
         "category": "ICU",
         "name": "Intensive Care Unit (ICU)",
-        "daily_tariff": 7020.0,
-        "description": "Critical care bed with continuous hemodynamics, RMO, ventilator support",
+        "daily_tariff": 13000.0,
+        "status": "VERIFY",
+        "description": "Critical care ICU",
         "data_status": "AUTHORITATIVE"
       }
     ],
     "beds": [
       {
-        "category": "GENERAL_WARD",
-        "total_beds": 300,
-        "occupied_beds": 250,
-        "available_beds": 50,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
+        "category": "GENERAL",
+        "total_beds": 100,
+        "occupied_beds": 82,
+        "available_beds": 18,
         "data_status": "SIMULATED"
       },
       {
         "category": "SEMI_PRIVATE",
-        "total_beds": 150,
-        "occupied_beds": 129,
-        "available_beds": 21,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
+        "total_beds": 35,
+        "occupied_beds": 27,
+        "available_beds": 8,
         "data_status": "SIMULATED"
       },
       {
-        "category": "PRIVATE_AC",
-        "total_beds": 90,
-        "occupied_beds": 68,
-        "available_beds": 22,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
-        "data_status": "SIMULATED"
-      },
-      {
-        "category": "DELUXE",
-        "total_beds": 30,
-        "occupied_beds": 24,
-        "available_beds": 6,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
+        "category": "PRIVATE",
+        "total_beds": 25,
+        "occupied_beds": 21,
+        "available_beds": 4,
         "data_status": "SIMULATED"
       },
       {
         "category": "ICU",
-        "total_beds": 80,
-        "occupied_beds": 62,
-        "available_beds": 18,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
+        "total_beds": 20,
+        "occupied_beds": 19,
+        "available_beds": 1,
         "data_status": "SIMULATED"
       }
     ]
@@ -231,665 +205,708 @@
     "id": 3,
     "name": "Sri Jayadeva Institute of Cardiovascular Sciences",
     "hfr_id": "IN2910000103",
-    "facility_type": "GOVERNMENT_TERTIARY",
-    "ownership": "PUBLIC",
-    "address": "Bannerghatta Main Road, 9th Block, Jayanagar",
+    "facility_type": "GOVERNMENT_AUTONOMOUS",
+    "ownership": "STATE_GOVERNMENT",
+    "address": "Jayanagar 9th Block, Bannerghatta Road",
     "city": "Bengaluru",
     "district": "Bengaluru Urban",
     "state": "Karnataka",
     "pincode": "560069",
-    "latitude": 12.9237,
-    "longitude": 77.5937,
+    "latitude": 12.9182,
+    "longitude": 77.5929,
     "phone": "+91-80-2297-7400",
     "email": "director@jayadevacardiology.com",
-    "total_beds": 1150,
-    "icu_beds": 160,
+    "total_beds": 600,
+    "icu_beds": 120,
     "emergency_available": true,
     "nabh_accredited": true,
     "specialties": [
-      "CAR"
+      "cardiology",
+      "icu",
+      "cath_lab",
+      "emergency",
+      "radiology",
+      "diagnostics"
     ],
     "empaneled_payers": [
-      "PMJAY",
+      "STAR_HEALTH",
+      "HDFC_ERGO",
+      "PM_JAY",
       "CGHS",
-      "AROGYA_KARNATAKA",
-      "STAR_HEALTH"
+      "AROGYA_KARNATAKA"
     ],
     "markup_multiplier": 1.0,
     "rooms": [
       {
-        "category": "GENERAL_WARD",
+        "category": "GENERAL",
         "name": "General Ward Bed",
-        "daily_tariff": 1500.0,
-        "description": "Multi-occupancy ward bed including nursing care and basic monitoring",
+        "daily_tariff": 1200.0,
+        "status": "COMPATIBLE",
+        "description": "Subsidized ward",
         "data_status": "AUTHORITATIVE"
       },
       {
         "category": "SEMI_PRIVATE",
-        "name": "Semi-Private Room (Twin Sharing)",
+        "name": "Semi-Private Room",
         "daily_tariff": 3000.0,
-        "description": "Two-bed shared room with partition, shared attached bathroom",
+        "status": "COMPATIBLE",
+        "description": "Twin sharing room",
         "data_status": "AUTHORITATIVE"
       },
       {
-        "category": "PRIVATE_AC",
-        "name": "Single Private A/C Room",
-        "daily_tariff": 4500.0,
-        "description": "Individual private air-conditioned room with attendant couch and private bathroom",
+        "category": "PRIVATE",
+        "name": "Single Private Room",
+        "daily_tariff": 5000.0,
+        "status": "COMPATIBLE",
+        "description": "Special room",
         "data_status": "AUTHORITATIVE"
-      },
-      {
-        "category": "DELUXE",
-        "name": "Deluxe Suite",
-        "daily_tariff": 7500.0,
-        "description": "Executive suite with patient lounge, premium amenities, refrigerator",
-        "data_status": "SIMULATED"
       },
       {
         "category": "ICU",
         "name": "Intensive Care Unit (ICU)",
-        "daily_tariff": 5400.0,
-        "description": "Critical care bed with continuous hemodynamics, RMO, ventilator support",
+        "daily_tariff": 8000.0,
+        "status": "VERIFY",
+        "description": "CCU",
         "data_status": "AUTHORITATIVE"
       }
     ],
     "beds": [
       {
-        "category": "GENERAL_WARD",
-        "total_beds": 575,
-        "occupied_beds": 403,
-        "available_beds": 172,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
+        "category": "GENERAL",
+        "total_beds": 200,
+        "occupied_beds": 178,
+        "available_beds": 22,
         "data_status": "SIMULATED"
       },
       {
         "category": "SEMI_PRIVATE",
-        "total_beds": 287,
-        "occupied_beds": 246,
-        "available_beds": 41,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
+        "total_beds": 50,
+        "occupied_beds": 38,
+        "available_beds": 12,
         "data_status": "SIMULATED"
       },
       {
-        "category": "PRIVATE_AC",
-        "total_beds": 172,
-        "occupied_beds": 154,
-        "available_beds": 18,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
-        "data_status": "SIMULATED"
-      },
-      {
-        "category": "DELUXE",
-        "total_beds": 57,
-        "occupied_beds": 51,
-        "available_beds": 6,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
+        "category": "PRIVATE",
+        "total_beds": 30,
+        "occupied_beds": 26,
+        "available_beds": 4,
         "data_status": "SIMULATED"
       },
       {
         "category": "ICU",
-        "total_beds": 160,
-        "occupied_beds": 129,
-        "available_beds": 31,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
+        "total_beds": 40,
+        "occupied_beds": 34,
+        "available_beds": 6,
         "data_status": "SIMULATED"
       }
     ]
   },
   {
     "id": 4,
-    "name": "Fortis Hospital, Cunningham Road",
-    "hfr_id": "IN2910000104",
+    "name": "Apollo Hospitals, Jubilee Hills",
+    "hfr_id": "IN3610000201",
     "facility_type": "PRIVATE_MULTISPECIALTY",
     "ownership": "PRIVATE_FOR_PROFIT",
-    "address": "14, Cunningham Road, Vasanth Nagar",
-    "city": "Bengaluru",
-    "district": "Bengaluru Urban",
-    "state": "Karnataka",
-    "pincode": "560052",
-    "latitude": 12.9868,
-    "longitude": 77.5974,
-    "phone": "+91-80-4199-4444",
-    "email": "care.cunningham@fortishealthcare.com",
-    "total_beds": 150,
-    "icu_beds": 30,
+    "address": "Road No 72, Opp. Bharatiya Vidya Bhavan, Film Nagar, Jubilee Hills",
+    "city": "Hyderabad",
+    "district": "Hyderabad",
+    "state": "Telangana",
+    "pincode": "500096",
+    "latitude": 17.4184,
+    "longitude": 78.4116,
+    "phone": "+91-40-2360-7777",
+    "email": "info_hyderabad@apollohospitals.com",
+    "total_beds": 550,
+    "icu_beds": 90,
     "emergency_available": true,
     "nabh_accredited": true,
     "specialties": [
-      "CAR",
-      "ORT",
-      "GAS"
-    ],
-    "empaneled_payers": [
-      "HDFC_ERGO",
-      "ICICI_LOMBARD",
-      "CARE_HEALTH"
-    ],
-    "markup_multiplier": 1.28,
-    "rooms": [
-      {
-        "category": "GENERAL_WARD",
-        "name": "General Ward Bed",
-        "daily_tariff": 1920.0,
-        "description": "Multi-occupancy ward bed including nursing care and basic monitoring",
-        "data_status": "AUTHORITATIVE"
-      },
-      {
-        "category": "SEMI_PRIVATE",
-        "name": "Semi-Private Room (Twin Sharing)",
-        "daily_tariff": 3840.0,
-        "description": "Two-bed shared room with partition, shared attached bathroom",
-        "data_status": "AUTHORITATIVE"
-      },
-      {
-        "category": "PRIVATE_AC",
-        "name": "Single Private A/C Room",
-        "daily_tariff": 5760.0,
-        "description": "Individual private air-conditioned room with attendant couch and private bathroom",
-        "data_status": "AUTHORITATIVE"
-      },
-      {
-        "category": "DELUXE",
-        "name": "Deluxe Suite",
-        "daily_tariff": 9600.0,
-        "description": "Executive suite with patient lounge, premium amenities, refrigerator",
-        "data_status": "SIMULATED"
-      },
-      {
-        "category": "ICU",
-        "name": "Intensive Care Unit (ICU)",
-        "daily_tariff": 6912.0,
-        "description": "Critical care bed with continuous hemodynamics, RMO, ventilator support",
-        "data_status": "AUTHORITATIVE"
-      }
-    ],
-    "beds": [
-      {
-        "category": "GENERAL_WARD",
-        "total_beds": 75,
-        "occupied_beds": 59,
-        "available_beds": 16,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
-        "data_status": "SIMULATED"
-      },
-      {
-        "category": "SEMI_PRIVATE",
-        "total_beds": 37,
-        "occupied_beds": 28,
-        "available_beds": 9,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
-        "data_status": "SIMULATED"
-      },
-      {
-        "category": "PRIVATE_AC",
-        "total_beds": 22,
-        "occupied_beds": 18,
-        "available_beds": 4,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
-        "data_status": "SIMULATED"
-      },
-      {
-        "category": "DELUXE",
-        "total_beds": 7,
-        "occupied_beds": 5,
-        "available_beds": 2,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
-        "data_status": "SIMULATED"
-      },
-      {
-        "category": "ICU",
-        "total_beds": 30,
-        "occupied_beds": 23,
-        "available_beds": 7,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
-        "data_status": "SIMULATED"
-      }
-    ]
-  },
-  {
-    "id": 5,
-    "name": "Victoria Hospital (BMCRI)",
-    "hfr_id": "IN2910000105",
-    "facility_type": "GOVERNMENT_TERTIARY",
-    "ownership": "PUBLIC",
-    "address": "Fort Road, Near City Market, Kalasipalya",
-    "city": "Bengaluru",
-    "district": "Bengaluru Urban",
-    "state": "Karnataka",
-    "pincode": "560002",
-    "latitude": 12.9647,
-    "longitude": 77.5758,
-    "phone": "+91-80-2670-1150",
-    "email": "medsupdt_vh@bmcri.org",
-    "total_beds": 1000,
-    "icu_beds": 120,
-    "emergency_available": true,
-    "nabh_accredited": false,
-    "specialties": [
-      "CAR",
-      "ORT",
-      "NEU",
-      "GAS",
-      "ONC"
-    ],
-    "empaneled_payers": [
-      "PMJAY",
-      "AROGYA_KARNATAKA",
-      "CGHS"
-    ],
-    "markup_multiplier": 0.85,
-    "rooms": [
-      {
-        "category": "GENERAL_WARD",
-        "name": "General Ward Bed",
-        "daily_tariff": 1275.0,
-        "description": "Multi-occupancy ward bed including nursing care and basic monitoring",
-        "data_status": "AUTHORITATIVE"
-      },
-      {
-        "category": "SEMI_PRIVATE",
-        "name": "Semi-Private Room (Twin Sharing)",
-        "daily_tariff": 2550.0,
-        "description": "Two-bed shared room with partition, shared attached bathroom",
-        "data_status": "AUTHORITATIVE"
-      },
-      {
-        "category": "PRIVATE_AC",
-        "name": "Single Private A/C Room",
-        "daily_tariff": 3825.0,
-        "description": "Individual private air-conditioned room with attendant couch and private bathroom",
-        "data_status": "AUTHORITATIVE"
-      },
-      {
-        "category": "DELUXE",
-        "name": "Deluxe Suite",
-        "daily_tariff": 6375.0,
-        "description": "Executive suite with patient lounge, premium amenities, refrigerator",
-        "data_status": "SIMULATED"
-      },
-      {
-        "category": "ICU",
-        "name": "Intensive Care Unit (ICU)",
-        "daily_tariff": 4590.0,
-        "description": "Critical care bed with continuous hemodynamics, RMO, ventilator support",
-        "data_status": "AUTHORITATIVE"
-      }
-    ],
-    "beds": [
-      {
-        "category": "GENERAL_WARD",
-        "total_beds": 500,
-        "occupied_beds": 383,
-        "available_beds": 117,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
-        "data_status": "SIMULATED"
-      },
-      {
-        "category": "SEMI_PRIVATE",
-        "total_beds": 250,
-        "occupied_beds": 214,
-        "available_beds": 36,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
-        "data_status": "SIMULATED"
-      },
-      {
-        "category": "PRIVATE_AC",
-        "total_beds": 150,
-        "occupied_beds": 130,
-        "available_beds": 20,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
-        "data_status": "SIMULATED"
-      },
-      {
-        "category": "DELUXE",
-        "total_beds": 50,
-        "occupied_beds": 38,
-        "available_beds": 12,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
-        "data_status": "SIMULATED"
-      },
-      {
-        "category": "ICU",
-        "total_beds": 120,
-        "occupied_beds": 99,
-        "available_beds": 21,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
-        "data_status": "SIMULATED"
-      }
-    ]
-  },
-  {
-    "id": 6,
-    "name": "Narayana Institute of Cardiac Sciences",
-    "hfr_id": "IN2910000106",
-    "facility_type": "PRIVATE_MULTISPECIALTY",
-    "ownership": "PRIVATE_FOR_PROFIT",
-    "address": "258/A, Bommasandra Industrial Area, Anekal Taluk",
-    "city": "Bengaluru",
-    "district": "Bengaluru Urban",
-    "state": "Karnataka",
-    "pincode": "560099",
-    "latitude": 12.8093,
-    "longitude": 77.6974,
-    "phone": "+91-80-7122-2222",
-    "email": "info.nics@narayanahealth.org",
-    "total_beds": 800,
-    "icu_beds": 140,
-    "emergency_available": true,
-    "nabh_accredited": true,
-    "specialties": [
-      "CAR",
-      "ORT",
-      "NEU",
-      "ONC"
+      "cardiology",
+      "icu",
+      "cath_lab",
+      "emergency",
+      "radiology",
+      "oncology",
+      "orthopedics",
+      "diagnostics",
+      "dialysis"
     ],
     "empaneled_payers": [
       "STAR_HEALTH",
       "HDFC_ERGO",
       "ICICI_LOMBARD",
       "CARE_HEALTH",
-      "NIVA_BUPA",
-      "PMJAY",
-      "AROGYA_KARNATAKA"
+      "CGHS",
+      "AAROGYASRI"
     ],
-    "markup_multiplier": 1.15,
+    "markup_multiplier": 1.25,
     "rooms": [
       {
-        "category": "GENERAL_WARD",
+        "category": "GENERAL",
         "name": "General Ward Bed",
-        "daily_tariff": 1725.0,
-        "description": "Multi-occupancy ward bed including nursing care and basic monitoring",
+        "daily_tariff": 1900.0,
+        "status": "COMPATIBLE",
+        "description": "Multi-occupancy ward",
         "data_status": "AUTHORITATIVE"
       },
       {
         "category": "SEMI_PRIVATE",
-        "name": "Semi-Private Room (Twin Sharing)",
-        "daily_tariff": 3450.0,
-        "description": "Two-bed shared room with partition, shared attached bathroom",
+        "name": "Semi-Private Room",
+        "daily_tariff": 4200.0,
+        "status": "COMPATIBLE",
+        "description": "Twin sharing room",
         "data_status": "AUTHORITATIVE"
       },
       {
-        "category": "PRIVATE_AC",
+        "category": "PRIVATE",
         "name": "Single Private A/C Room",
-        "daily_tariff": 5175.0,
-        "description": "Individual private air-conditioned room with attendant couch and private bathroom",
+        "daily_tariff": 7800.0,
+        "status": "EXCEEDS_CAP",
+        "description": "Private room",
         "data_status": "AUTHORITATIVE"
-      },
-      {
-        "category": "DELUXE",
-        "name": "Deluxe Suite",
-        "daily_tariff": 8625.0,
-        "description": "Executive suite with patient lounge, premium amenities, refrigerator",
-        "data_status": "SIMULATED"
       },
       {
         "category": "ICU",
         "name": "Intensive Care Unit (ICU)",
-        "daily_tariff": 6210.0,
-        "description": "Critical care bed with continuous hemodynamics, RMO, ventilator support",
+        "daily_tariff": 11500.0,
+        "status": "VERIFY",
+        "description": "Critical care ICU",
         "data_status": "AUTHORITATIVE"
       }
     ],
     "beds": [
       {
-        "category": "GENERAL_WARD",
-        "total_beds": 400,
-        "occupied_beds": 353,
-        "available_beds": 47,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
+        "category": "GENERAL",
+        "total_beds": 80,
+        "occupied_beds": 64,
+        "available_beds": 16,
         "data_status": "SIMULATED"
       },
       {
         "category": "SEMI_PRIVATE",
-        "total_beds": 200,
-        "occupied_beds": 182,
-        "available_beds": 18,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
-        "data_status": "SIMULATED"
-      },
-      {
-        "category": "PRIVATE_AC",
-        "total_beds": 120,
-        "occupied_beds": 104,
-        "available_beds": 16,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
-        "data_status": "SIMULATED"
-      },
-      {
-        "category": "DELUXE",
-        "total_beds": 40,
-        "occupied_beds": 34,
+        "total_beds": 30,
+        "occupied_beds": 24,
         "available_beds": 6,
-        "last_updated": "2026-08-25T08:16:00.877175+00:00",
+        "data_status": "SIMULATED"
+      },
+      {
+        "category": "PRIVATE",
+        "total_beds": 25,
+        "occupied_beds": 21,
+        "available_beds": 4,
         "data_status": "SIMULATED"
       },
       {
         "category": "ICU",
-        "total_beds": 140,
-        "occupied_beds": 107,
-        "available_beds": 33,
-        "last_updated": "2026-08-25T08:16:00.878175+00:00",
+        "total_beds": 18,
+        "occupied_beds": 14,
+        "available_beds": 4,
+        "data_status": "SIMULATED"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Yashoda Hospitals, Somajiguda",
+    "hfr_id": "IN3610000202",
+    "facility_type": "PRIVATE_MULTISPECIALTY",
+    "ownership": "PRIVATE_FOR_PROFIT",
+    "address": "Raj Bhavan Road, Matha Nagar, Somajiguda",
+    "city": "Hyderabad",
+    "district": "Hyderabad",
+    "state": "Telangana",
+    "pincode": "500082",
+    "latitude": 17.4244,
+    "longitude": 78.4578,
+    "phone": "+91-40-4567-4567",
+    "email": "somajiguda@yashodamail.com",
+    "total_beds": 450,
+    "icu_beds": 75,
+    "emergency_available": true,
+    "nabh_accredited": true,
+    "specialties": [
+      "cardiology",
+      "icu",
+      "cath_lab",
+      "emergency",
+      "radiology",
+      "oncology",
+      "orthopedics"
+    ],
+    "empaneled_payers": [
+      "STAR_HEALTH",
+      "HDFC_ERGO",
+      "ICICI_LOMBARD",
+      "CARE_HEALTH",
+      "AAROGYASRI"
+    ],
+    "markup_multiplier": 1.2,
+    "rooms": [
+      {
+        "category": "GENERAL",
+        "name": "General Ward Bed",
+        "daily_tariff": 1800.0,
+        "status": "COMPATIBLE",
+        "description": "Multi-occupancy ward",
+        "data_status": "AUTHORITATIVE"
+      },
+      {
+        "category": "SEMI_PRIVATE",
+        "name": "Semi-Private Room",
+        "daily_tariff": 4000.0,
+        "status": "COMPATIBLE",
+        "description": "Twin sharing room",
+        "data_status": "AUTHORITATIVE"
+      },
+      {
+        "category": "PRIVATE",
+        "name": "Single Private A/C Room",
+        "daily_tariff": 7500.0,
+        "status": "EXCEEDS_CAP",
+        "description": "Private room",
+        "data_status": "AUTHORITATIVE"
+      },
+      {
+        "category": "ICU",
+        "name": "Intensive Care Unit (ICU)",
+        "daily_tariff": 11000.0,
+        "status": "VERIFY",
+        "description": "Critical care ICU",
+        "data_status": "AUTHORITATIVE"
+      }
+    ],
+    "beds": [
+      {
+        "category": "GENERAL",
+        "total_beds": 70,
+        "occupied_beds": 58,
+        "available_beds": 12,
+        "data_status": "SIMULATED"
+      },
+      {
+        "category": "SEMI_PRIVATE",
+        "total_beds": 25,
+        "occupied_beds": 20,
+        "available_beds": 5,
+        "data_status": "SIMULATED"
+      },
+      {
+        "category": "PRIVATE",
+        "total_beds": 20,
+        "occupied_beds": 17,
+        "available_beds": 3,
+        "data_status": "SIMULATED"
+      },
+      {
+        "category": "ICU",
+        "total_beds": 15,
+        "occupied_beds": 13,
+        "available_beds": 2,
+        "data_status": "SIMULATED"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "CARE Hospitals, Banjara Hills",
+    "hfr_id": "IN3610000203",
+    "facility_type": "PRIVATE_MULTISPECIALTY",
+    "ownership": "PRIVATE_FOR_PROFIT",
+    "address": "Road No 1, Prem Nagar, Banjara Hills",
+    "city": "Hyderabad",
+    "district": "Hyderabad",
+    "state": "Telangana",
+    "pincode": "500034",
+    "latitude": 17.4147,
+    "longitude": 78.4482,
+    "phone": "+91-40-6165-6565",
+    "email": "banjara@carehospitals.com",
+    "total_beds": 300,
+    "icu_beds": 50,
+    "emergency_available": true,
+    "nabh_accredited": true,
+    "specialties": [
+      "cardiology",
+      "icu",
+      "cath_lab",
+      "emergency",
+      "radiology",
+      "diagnostics"
+    ],
+    "empaneled_payers": [
+      "STAR_HEALTH",
+      "HDFC_ERGO",
+      "NIVA_BUPA",
+      "CGHS",
+      "AAROGYASRI"
+    ],
+    "markup_multiplier": 1.15,
+    "rooms": [
+      {
+        "category": "GENERAL",
+        "name": "General Ward Bed",
+        "daily_tariff": 1700.0,
+        "status": "COMPATIBLE",
+        "description": "Multi-occupancy ward",
+        "data_status": "AUTHORITATIVE"
+      },
+      {
+        "category": "SEMI_PRIVATE",
+        "name": "Semi-Private Room",
+        "daily_tariff": 3800.0,
+        "status": "COMPATIBLE",
+        "description": "Twin sharing room",
+        "data_status": "AUTHORITATIVE"
+      },
+      {
+        "category": "PRIVATE",
+        "name": "Single Private A/C Room",
+        "daily_tariff": 7000.0,
+        "status": "EXCEEDS_CAP",
+        "description": "Private room",
+        "data_status": "AUTHORITATIVE"
+      },
+      {
+        "category": "ICU",
+        "name": "Intensive Care Unit (ICU)",
+        "daily_tariff": 10500.0,
+        "status": "VERIFY",
+        "description": "Critical care ICU",
+        "data_status": "AUTHORITATIVE"
+      }
+    ],
+    "beds": [
+      {
+        "category": "GENERAL",
+        "total_beds": 50,
+        "occupied_beds": 41,
+        "available_beds": 9,
+        "data_status": "SIMULATED"
+      },
+      {
+        "category": "SEMI_PRIVATE",
+        "total_beds": 20,
+        "occupied_beds": 16,
+        "available_beds": 4,
+        "data_status": "SIMULATED"
+      },
+      {
+        "category": "PRIVATE",
+        "total_beds": 15,
+        "occupied_beds": 13,
+        "available_beds": 2,
+        "data_status": "SIMULATED"
+      },
+      {
+        "category": "ICU",
+        "total_beds": 12,
+        "occupied_beds": 10,
+        "available_beds": 2,
         "data_status": "SIMULATED"
       }
     ]
   },
   {
     "id": 7,
-    "name": "Tata Memorial Hospital, Parel",
-    "hfr_id": "IN2710000201",
-    "facility_type": "GOVERNMENT_TERTIARY",
-    "ownership": "PUBLIC",
-    "address": "Dr. E Borges Road, Parel",
-    "city": "Mumbai",
-    "district": "Mumbai City",
-    "state": "Maharashtra",
-    "pincode": "400012",
-    "latitude": 19.0044,
-    "longitude": 72.8432,
-    "phone": "+91-22-2417-7000",
-    "email": "crs@tmc.gov.in",
-    "total_beds": 700,
-    "icu_beds": 90,
+    "name": "Nizam's Institute of Medical Sciences (NIMS)",
+    "hfr_id": "IN3610000204",
+    "facility_type": "GOVERNMENT_AUTONOMOUS",
+    "ownership": "STATE_GOVERNMENT",
+    "address": "Punjagutta, Hyderabad",
+    "city": "Hyderabad",
+    "district": "Hyderabad",
+    "state": "Telangana",
+    "pincode": "500082",
+    "latitude": 17.4223,
+    "longitude": 78.4526,
+    "phone": "+91-40-2348-9000",
+    "email": "nims@telangana.gov.in",
+    "total_beds": 1400,
+    "icu_beds": 180,
     "emergency_available": true,
     "nabh_accredited": true,
     "specialties": [
-      "ONC",
-      "NEU"
+      "cardiology",
+      "icu",
+      "cath_lab",
+      "emergency",
+      "radiology",
+      "dialysis",
+      "oncology",
+      "orthopedics"
     ],
     "empaneled_payers": [
-      "PMJAY",
-      "CGHS",
       "STAR_HEALTH",
-      "HDFC_ERGO"
+      "HDFC_ERGO",
+      "PM_JAY",
+      "CGHS",
+      "AAROGYASRI"
     ],
     "markup_multiplier": 1.0,
     "rooms": [
       {
-        "category": "GENERAL_WARD",
+        "category": "GENERAL",
         "name": "General Ward Bed",
-        "daily_tariff": 1500.0,
-        "description": "Multi-occupancy ward bed including nursing care and basic monitoring",
+        "daily_tariff": 1000.0,
+        "status": "COMPATIBLE",
+        "description": "Subsidized government ward",
         "data_status": "AUTHORITATIVE"
       },
       {
         "category": "SEMI_PRIVATE",
-        "name": "Semi-Private Room (Twin Sharing)",
-        "daily_tariff": 3000.0,
-        "description": "Two-bed shared room with partition, shared attached bathroom",
+        "name": "Semi-Private Room",
+        "daily_tariff": 2500.0,
+        "status": "COMPATIBLE",
+        "description": "Twin sharing room",
         "data_status": "AUTHORITATIVE"
       },
       {
-        "category": "PRIVATE_AC",
-        "name": "Single Private A/C Room",
+        "category": "PRIVATE",
+        "name": "Single Private Room",
         "daily_tariff": 4500.0,
-        "description": "Individual private air-conditioned room with attendant couch and private bathroom",
+        "status": "COMPATIBLE",
+        "description": "Special room",
         "data_status": "AUTHORITATIVE"
-      },
-      {
-        "category": "DELUXE",
-        "name": "Deluxe Suite",
-        "daily_tariff": 7500.0,
-        "description": "Executive suite with patient lounge, premium amenities, refrigerator",
-        "data_status": "SIMULATED"
       },
       {
         "category": "ICU",
         "name": "Intensive Care Unit (ICU)",
-        "daily_tariff": 5400.0,
-        "description": "Critical care bed with continuous hemodynamics, RMO, ventilator support",
+        "daily_tariff": 7500.0,
+        "status": "VERIFY",
+        "description": "CCU",
         "data_status": "AUTHORITATIVE"
       }
     ],
     "beds": [
       {
-        "category": "GENERAL_WARD",
-        "total_beds": 350,
-        "occupied_beds": 299,
-        "available_beds": 51,
-        "last_updated": "2026-08-25T08:16:00.878175+00:00",
+        "category": "GENERAL",
+        "total_beds": 400,
+        "occupied_beds": 365,
+        "available_beds": 35,
         "data_status": "SIMULATED"
       },
       {
         "category": "SEMI_PRIVATE",
-        "total_beds": 175,
-        "occupied_beds": 157,
+        "total_beds": 100,
+        "occupied_beds": 82,
         "available_beds": 18,
-        "last_updated": "2026-08-25T08:16:00.878175+00:00",
         "data_status": "SIMULATED"
       },
       {
-        "category": "PRIVATE_AC",
-        "total_beds": 105,
-        "occupied_beds": 88,
-        "available_beds": 17,
-        "last_updated": "2026-08-25T08:16:00.878175+00:00",
-        "data_status": "SIMULATED"
-      },
-      {
-        "category": "DELUXE",
-        "total_beds": 35,
-        "occupied_beds": 26,
-        "available_beds": 9,
-        "last_updated": "2026-08-25T08:16:00.878175+00:00",
+        "category": "PRIVATE",
+        "total_beds": 50,
+        "occupied_beds": 44,
+        "available_beds": 6,
         "data_status": "SIMULATED"
       },
       {
         "category": "ICU",
-        "total_beds": 90,
-        "occupied_beds": 78,
-        "available_beds": 12,
-        "last_updated": "2026-08-25T08:16:00.878175+00:00",
+        "total_beds": 60,
+        "occupied_beds": 53,
+        "available_beds": 7,
         "data_status": "SIMULATED"
       }
     ]
   },
   {
     "id": 8,
-    "name": "All India Institute of Medical Sciences (AIIMS)",
-    "hfr_id": "IN0710000301",
-    "facility_type": "GOVERNMENT_TERTIARY",
-    "ownership": "PUBLIC",
-    "address": "Sri Aurobindo Marg, Ansari Nagar",
-    "city": "New Delhi",
-    "district": "New Delhi",
-    "state": "Delhi",
-    "pincode": "110029",
-    "latitude": 28.5672,
-    "longitude": 77.21,
-    "phone": "+91-11-2658-8500",
-    "email": "director@aiims.edu",
-    "total_beds": 2400,
-    "icu_beds": 350,
+    "name": "Asian Heart Institute, BKC",
+    "hfr_id": "IN2710000301",
+    "facility_type": "PRIVATE_SUPERSPECIALTY",
+    "ownership": "PRIVATE_FOR_PROFIT",
+    "address": "G / N Block, Bandra Kurla Complex, Bandra East",
+    "city": "Mumbai",
+    "district": "Mumbai Suburban",
+    "state": "Maharashtra",
+    "pincode": "400051",
+    "latitude": 19.0664,
+    "longitude": 72.8687,
+    "phone": "+91-22-6698-6666",
+    "email": "info@ahimsl.com",
+    "total_beds": 250,
+    "icu_beds": 50,
     "emergency_available": true,
     "nabh_accredited": true,
     "specialties": [
-      "CAR",
-      "ORT",
-      "NEU",
-      "GAS",
-      "ONC"
+      "cardiology",
+      "icu",
+      "cath_lab",
+      "emergency",
+      "radiology",
+      "diagnostics"
     ],
     "empaneled_payers": [
-      "PMJAY",
-      "CGHS"
+      "STAR_HEALTH",
+      "HDFC_ERGO",
+      "ICICI_LOMBARD",
+      "CARE_HEALTH",
+      "CGHS",
+      "MAHATMA_JYOTIBA_PHULE"
     ],
-    "markup_multiplier": 0.9,
+    "markup_multiplier": 1.35,
     "rooms": [
       {
-        "category": "GENERAL_WARD",
+        "category": "GENERAL",
         "name": "General Ward Bed",
-        "daily_tariff": 1350.0,
-        "description": "Multi-occupancy ward bed including nursing care and basic monitoring",
+        "daily_tariff": 2500.0,
+        "status": "COMPATIBLE",
+        "description": "Multi-occupancy ward",
         "data_status": "AUTHORITATIVE"
       },
       {
         "category": "SEMI_PRIVATE",
-        "name": "Semi-Private Room (Twin Sharing)",
-        "daily_tariff": 2700.0,
-        "description": "Two-bed shared room with partition, shared attached bathroom",
+        "name": "Semi-Private Room",
+        "daily_tariff": 5000.0,
+        "status": "COMPATIBLE",
+        "description": "Twin sharing room",
         "data_status": "AUTHORITATIVE"
       },
       {
-        "category": "PRIVATE_AC",
+        "category": "PRIVATE",
         "name": "Single Private A/C Room",
-        "daily_tariff": 4050.0,
-        "description": "Individual private air-conditioned room with attendant couch and private bathroom",
+        "daily_tariff": 9500.0,
+        "status": "EXCEEDS_CAP",
+        "description": "Private room",
         "data_status": "AUTHORITATIVE"
-      },
-      {
-        "category": "DELUXE",
-        "name": "Deluxe Suite",
-        "daily_tariff": 6750.0,
-        "description": "Executive suite with patient lounge, premium amenities, refrigerator",
-        "data_status": "SIMULATED"
       },
       {
         "category": "ICU",
         "name": "Intensive Care Unit (ICU)",
-        "daily_tariff": 4860.0,
-        "description": "Critical care bed with continuous hemodynamics, RMO, ventilator support",
+        "daily_tariff": 14000.0,
+        "status": "VERIFY",
+        "description": "Critical care ICU",
         "data_status": "AUTHORITATIVE"
       }
     ],
     "beds": [
       {
-        "category": "GENERAL_WARD",
-        "total_beds": 1200,
-        "occupied_beds": 995,
-        "available_beds": 205,
-        "last_updated": "2026-08-25T08:16:00.878175+00:00",
+        "category": "GENERAL",
+        "total_beds": 60,
+        "occupied_beds": 49,
+        "available_beds": 11,
         "data_status": "SIMULATED"
       },
       {
         "category": "SEMI_PRIVATE",
-        "total_beds": 600,
-        "occupied_beds": 529,
-        "available_beds": 71,
-        "last_updated": "2026-08-25T08:16:00.878175+00:00",
+        "total_beds": 25,
+        "occupied_beds": 21,
+        "available_beds": 4,
         "data_status": "SIMULATED"
       },
       {
-        "category": "PRIVATE_AC",
-        "total_beds": 360,
-        "occupied_beds": 330,
-        "available_beds": 30,
-        "last_updated": "2026-08-25T08:16:00.878175+00:00",
-        "data_status": "SIMULATED"
-      },
-      {
-        "category": "DELUXE",
-        "total_beds": 120,
-        "occupied_beds": 91,
-        "available_beds": 29,
-        "last_updated": "2026-08-25T08:16:00.878175+00:00",
+        "category": "PRIVATE",
+        "total_beds": 20,
+        "occupied_beds": 18,
+        "available_beds": 2,
         "data_status": "SIMULATED"
       },
       {
         "category": "ICU",
-        "total_beds": 350,
-        "occupied_beds": 308,
-        "available_beds": 42,
-        "last_updated": "2026-08-25T08:16:00.878175+00:00",
+        "total_beds": 15,
+        "occupied_beds": 12,
+        "available_beds": 3,
+        "data_status": "SIMULATED"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Fortis Escorts Heart Institute, Okhla",
+    "hfr_id": "IN0710000401",
+    "facility_type": "PRIVATE_SUPERSPECIALTY",
+    "ownership": "PRIVATE_FOR_PROFIT",
+    "address": "Okhla Road, Sukhdev Vihar Metro Station",
+    "city": "New Delhi",
+    "district": "South East Delhi",
+    "state": "Delhi",
+    "pincode": "110025",
+    "latitude": 28.5601,
+    "longitude": 77.2797,
+    "phone": "+91-11-4713-5000",
+    "email": "fehi@fortishealthcare.com",
+    "total_beds": 310,
+    "icu_beds": 65,
+    "emergency_available": true,
+    "nabh_accredited": true,
+    "specialties": [
+      "cardiology",
+      "icu",
+      "cath_lab",
+      "emergency",
+      "radiology",
+      "diagnostics",
+      "dialysis"
+    ],
+    "empaneled_payers": [
+      "STAR_HEALTH",
+      "HDFC_ERGO",
+      "ICICI_LOMBARD",
+      "CARE_HEALTH",
+      "CGHS",
+      "PM_JAY"
+    ],
+    "markup_multiplier": 1.3,
+    "rooms": [
+      {
+        "category": "GENERAL",
+        "name": "General Ward Bed",
+        "daily_tariff": 2200.0,
+        "status": "COMPATIBLE",
+        "description": "Multi-occupancy ward",
+        "data_status": "AUTHORITATIVE"
+      },
+      {
+        "category": "SEMI_PRIVATE",
+        "name": "Semi-Private Room",
+        "daily_tariff": 4800.0,
+        "status": "COMPATIBLE",
+        "description": "Twin sharing room",
+        "data_status": "AUTHORITATIVE"
+      },
+      {
+        "category": "PRIVATE",
+        "name": "Single Private A/C Room",
+        "daily_tariff": 8800.0,
+        "status": "EXCEEDS_CAP",
+        "description": "Private room",
+        "data_status": "AUTHORITATIVE"
+      },
+      {
+        "category": "ICU",
+        "name": "Intensive Care Unit (ICU)",
+        "daily_tariff": 13500.0,
+        "status": "VERIFY",
+        "description": "Critical care ICU",
+        "data_status": "AUTHORITATIVE"
+      }
+    ],
+    "beds": [
+      {
+        "category": "GENERAL",
+        "total_beds": 75,
+        "occupied_beds": 62,
+        "available_beds": 13,
+        "data_status": "SIMULATED"
+      },
+      {
+        "category": "SEMI_PRIVATE",
+        "total_beds": 30,
+        "occupied_beds": 25,
+        "available_beds": 5,
+        "data_status": "SIMULATED"
+      },
+      {
+        "category": "PRIVATE",
+        "total_beds": 25,
+        "occupied_beds": 22,
+        "available_beds": 3,
+        "data_status": "SIMULATED"
+      },
+      {
+        "category": "ICU",
+        "total_beds": 20,
+        "occupied_beds": 17,
+        "available_beds": 3,
         "data_status": "SIMULATED"
       }
     ]
