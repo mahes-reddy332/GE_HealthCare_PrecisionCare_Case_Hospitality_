@@ -1,0 +1,58 @@
+[
+  {
+    "id": "STAR_HEALTH",
+    "name": "Star Health and Allied Insurance",
+    "type": "PRIVATE_INSURER",
+    "cashless_available": true,
+    "network_type": "CASHLESS_NETWORK"
+  },
+  {
+    "id": "HDFC_ERGO",
+    "name": "HDFC ERGO General Insurance",
+    "type": "PRIVATE_INSURER",
+    "cashless_available": true,
+    "network_type": "CASHLESS_NETWORK"
+  },
+  {
+    "id": "ICICI_LOMBARD",
+    "name": "ICICI Lombard Health Care",
+    "type": "PRIVATE_INSURER",
+    "cashless_available": true,
+    "network_type": "CASHLESS_NETWORK"
+  },
+  {
+    "id": "CARE_HEALTH",
+    "name": "Care Health Insurance",
+    "type": "PRIVATE_INSURER",
+    "cashless_available": true,
+    "network_type": "CASHLESS_NETWORK"
+  },
+  {
+    "id": "NIVA_BUPA",
+    "name": "Niva Bupa Health Insurance",
+    "type": "PRIVATE_INSURER",
+    "cashless_available": true,
+    "network_type": "CASHLESS_NETWORK"
+  },
+  {
+    "id": "PMJAY",
+    "name": "Ayushman Bharat PM-JAY",
+    "type": "GOVERNMENT_CENTRAL",
+    "cashless_available": true,
+    "network_type": "GOVERNMENT_SCHEME"
+  },
+  {
+    "id": "CGHS",
+    "name": "Central Government Health Scheme",
+    "type": "GOVERNMENT_CENTRAL",
+    "cashless_available": true,
+    "network_type": "GOVERNMENT_SCHEME"
+  },
+  {
+    "id": "AROGYA_KARNATAKA",
+    "name": "Ayushman Bharat - Arogya Karnataka (SAST)",
+    "type": "GOVERNMENT_STATE",
+    "cashless_available": true,
+    "network_type": "GOVERNMENT_SCHEME"
+  }
+]

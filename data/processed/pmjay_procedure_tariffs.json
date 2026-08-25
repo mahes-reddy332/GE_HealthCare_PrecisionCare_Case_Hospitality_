@@ -1,0 +1,90 @@
+[
+  {
+    "specialty_code": "CAR",
+    "specialty_name": "Cardiology & Cardiothoracic Surgery",
+    "procedure_code": "CAR-001",
+    "procedure_name": "Coronary Angiography (CAG)",
+    "package_rate": 15000.0,
+    "nabh_rate": 17250.0,
+    "preauth_required": false,
+    "data_status": "AUTHORITATIVE",
+    "source": "PMJAY_HBP_2022"
+  },
+  {
+    "specialty_code": "CAR",
+    "specialty_name": "Cardiology & Cardiothoracic Surgery",
+    "procedure_code": "CAR-002",
+    "procedure_name": "Coronary Angioplasty (PTCA) with 1 DES Stent",
+    "package_rate": 85000.0,
+    "nabh_rate": 97750.0,
+    "preauth_required": true,
+    "data_status": "AUTHORITATIVE",
+    "source": "PMJAY_HBP_2022"
+  },
+  {
+    "specialty_code": "CAR",
+    "specialty_name": "Cardiology & Cardiothoracic Surgery",
+    "procedure_code": "CAR-003",
+    "procedure_name": "Coronary Artery Bypass Graft (CABG - Off Pump)",
+    "package_rate": 165000.0,
+    "nabh_rate": 189750.0,
+    "preauth_required": true,
+    "data_status": "AUTHORITATIVE",
+    "source": "PMJAY_HBP_2022"
+  },
+  {
+    "specialty_code": "ORT",
+    "specialty_name": "Orthopedics & Joint Replacement",
+    "procedure_code": "ORT-001",
+    "procedure_name": "Total Knee Replacement (TKR - Unilateral)",
+    "package_rate": 110000.0,
+    "nabh_rate": 126500.0,
+    "preauth_required": true,
+    "data_status": "AUTHORITATIVE",
+    "source": "PMJAY_HBP_2022"
+  },
+  {
+    "specialty_code": "ORT",
+    "specialty_name": "Orthopedics & Joint Replacement",
+    "procedure_code": "ORT-002",
+    "procedure_name": "Total Hip Replacement (THR - Unilateral)",
+    "package_rate": 125000.0,
+    "nabh_rate": 143750.0,
+    "preauth_required": true,
+    "data_status": "AUTHORITATIVE",
+    "source": "PMJAY_HBP_2022"
+  },
+  {
+    "specialty_code": "GAS",
+    "specialty_name": "Gastroenterology & GI Surgery",
+    "procedure_code": "GAS-001",
+    "procedure_name": "Laparoscopic Cholecystectomy",
+    "package_rate": 35000.0,
+    "nabh_rate": 40250.0,
+    "preauth_required": true,
+    "data_status": "AUTHORITATIVE",
+    "source": "PMJAY_HBP_2022"
+  },
+  {
+    "specialty_code": "ONC",
+    "specialty_name": "Oncology",
+    "procedure_code": "ONC-001",
+    "procedure_name": "Modified Radical Mastectomy",
+    "package_rate": 55000.0,
+    "nabh_rate": 63250.0,
+    "preauth_required": true,
+    "data_status": "AUTHORITATIVE",
+    "source": "PMJAY_HBP_2022"
+  },
+  {
+    "specialty_code": "NEU",
+    "specialty_name": "Neurology & Neurosurgery",
+    "procedure_code": "NEU-001",
+    "procedure_name": "Craniotomy for Evacuation of Hematoma",
+    "package_rate": 95000.0,
+    "nabh_rate": 109250.0,
+    "preauth_required": true,
+    "data_status": "AUTHORITATIVE",
+    "source": "PMJAY_HBP_2022"
+  }
+]

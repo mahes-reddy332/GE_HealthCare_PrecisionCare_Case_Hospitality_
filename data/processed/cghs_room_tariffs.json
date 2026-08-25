@@ -1,0 +1,42 @@
+[
+  {
+    "category": "GENERAL_WARD",
+    "name": "General Ward Bed",
+    "daily_tariff": 1500.0,
+    "description": "Multi-occupancy ward bed including nursing care and basic monitoring",
+    "data_status": "AUTHORITATIVE",
+    "source": "CGHS_RATE_CARDS"
+  },
+  {
+    "category": "SEMI_PRIVATE",
+    "name": "Semi-Private Room (Twin Sharing)",
+    "daily_tariff": 3000.0,
+    "description": "Two-bed shared room with partition, shared attached bathroom",
+    "data_status": "AUTHORITATIVE",
+    "source": "CGHS_RATE_CARDS"
+  },
+  {
+    "category": "PRIVATE_AC",
+    "name": "Single Private A/C Room",
+    "daily_tariff": 4500.0,
+    "description": "Individual private air-conditioned room with attendant couch and private bathroom",
+    "data_status": "AUTHORITATIVE",
+    "source": "CGHS_RATE_CARDS"
+  },
+  {
+    "category": "DELUXE",
+    "name": "Deluxe Suite",
+    "daily_tariff": 7500.0,
+    "description": "Executive suite with patient lounge, premium amenities, refrigerator",
+    "data_status": "SIMULATED",
+    "source": "HOSPITAL_MARKUP"
+  },
+  {
+    "category": "ICU",
+    "name": "Intensive Care Unit (ICU)",
+    "daily_tariff": 5400.0,
+    "description": "Critical care bed with continuous hemodynamics, RMO, ventilator support",
+    "data_status": "AUTHORITATIVE",
+    "source": "CGHS_RATE_CARDS"
+  }
+]
