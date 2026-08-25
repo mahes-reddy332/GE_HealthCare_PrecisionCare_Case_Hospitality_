@@ -1,4 +1,6 @@
-"use client"
+import os
+
+code = r'''"use client"
 
 import React, { useState } from "react"
 import { 
@@ -1500,7 +1502,7 @@ export default function PatientFirstHospitality() {
                   {[
                     { num: "01", title: "NEED IDENTIFIED", desc: "Cardiology + ICU + Cath Lab", done: true },
                     { num: "02", title: "HOSPITAL SELECTED", desc: selectedHospital.name, done: true },
-                    { num: "03", title: "ROOM SELECTED", desc: `${currentRoom.label} (₹${currentRoom.tariff.toLocaleString('en-IN')})`, done: true },
+                    { num: "03", title: "ROOM SELECTED", desc: `${currentRoom.label} (₹${currentRoom.tariff:,.0f})`, done: true },
                     { num: "04", title: "PRE-AUTHORIZATION", desc: "⚠ Action Required (48h)", active: true }
                   ].map((st, idx) => (
                     <div
@@ -1878,3 +1880,9 @@ export default function PatientFirstHospitality() {
     </div>
   )
 }
+'''
+
+target_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "frontend", "src", "components", "single-page-app.tsx"))
+with open(target_path, "w", encoding="utf-8") as f:
+    f.write(code)
+print(f"Successfully generated Patient-First UX to {target_path}")
