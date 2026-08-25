@@ -1,7 +1,7 @@
 import React from 'react';
-import { DataConfidence } from '@/types';
+import { DataConfidence } from '../../types';
 import { ShieldCheck, ShieldAlert, ShieldQuestion, BrainCircuit } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 export function DataConfidenceBadge({ confidence }: { confidence: DataConfidence }) {
   const config = {
