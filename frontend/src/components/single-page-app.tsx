@@ -4,7 +4,7 @@ import React, { useState } from "react"
 import {
   FileText, Activity, Users, ShieldCheck, Upload, CheckCircle2, AlertTriangle,
   Building2, Bed, HeartPulse, Stethoscope, Sparkles, Send,
-  Layers, Database, FileCode, Check, RefreshCw, Info, MapPin
+  Layers, Database, FileCode, Check, RefreshCw, Info, MapPin, User, ArrowLeft, ArrowRight, ArrowLeftRight
 } from "lucide-react"
 
 interface PolicyData {
@@ -63,24 +63,39 @@ interface DeductionSimResult {
 }
 
 export default function SinglePageApp() {
-  const [activeSection, setActiveSection] = useState("start-policy")
+  // 3-STAGE FLOW: "UPLOAD" -> "HOSPITAL_SELECTION" -> "PERSONALIZED_DASHBOARD"
+  const [flowState, setFlowState] = useState<"UPLOAD" | "HOSPITAL_SELECTION" | "PERSONALIZED_DASHBOARD">("UPLOAD")
+  
+  // Patient Information
+  const [patientName, setPatientName] = useState("Ramesh Kumar")
+  const [patientAge, setPatientAge] = useState("58")
+  const [patientGender, setPatientGender] = useState("Male")
+  const [patientAbha, setPatientAbha] = useState("91-8273-1928-1144")
+  
+  // App & Navigation State
+  const [activeSection, setActiveSection] = useState("dashboard")
   const [uploadedFile, setUploadedFile] = useState<{ name: string; size: string } | null>(null)
   const [analyzing, setAnalyzing] = useState(false)
   const [analysisStep, setAnalysisStep] = useState(0)
-  const [analysisComplete, setAnalysisComplete] = useState(false)
   
+  // Extracted Policy & Hospital Data
   const [policy, setPolicy] = useState<PolicyData | null>(null)
   const [hospitals, setHospitals] = useState<HospitalMatch[]>([])
-  const [selectedHospitalId, setSelectedHospitalId] = useState<number>(1)
+  const [selectedHospital, setSelectedHospital] = useState<HospitalMatch | null>(null)
+  
+  // Simulator States
   const [selectedProcedure, setSelectedProcedure] = useState("CAR-002")
   const [selectedRoomCategory, setSelectedRoomCategory] = useState("PRIVATE_AC")
   const [deductionResult, setDeductionResult] = useState<DeductionSimResult | null>(null)
   
+  // Journey Stage
   const [currentJourneyStage, setCurrentJourneyStage] = useState("PRE_ADMISSION")
+  
+  // Chatbot State
   const [messages, setMessages] = useState<Array<{ role: string; content: string; citations?: any[] }>>([
     {
       role: "assistant",
-      content: "Hello! I am your HOSPITALITY Policy & Healthcare Assistant. Upload your policy above or ask me any question about room rent caps, cashless hospital networks, and procedure costs."
+      content: "Hello! I am your HOSPITALITY Personal Healthcare Assistant. I am here to help you navigate room rent limits, cashless hospital empanelment, and out-of-pocket costs."
     }
   ])
   const [chatInput, setChatInput] = useState("")
@@ -128,33 +143,42 @@ export default function SinglePageApp() {
       
       setAnalysisStep(5)
       await new Promise(r => setTimeout(r, 400))
-      
-      const simRes = await fetch("http://localhost:8000/api/v1/matching/deduction-simulate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          policy_id: polData.id,
-          hospital_id: 1,
-          procedure_code: "CAR-002",
-          room_category: "PRIVATE_AC",
-          days_of_stay: 4
-        })
-      })
-      const simData: DeductionSimResult = await simRes.json()
-      setDeductionResult(simData)
-      
       setAnalysisStep(6)
       await new Promise(r => setTimeout(r, 300))
-      setAnalysisComplete(true)
-      setAnalyzing(false)
       
-      setTimeout(() => {
-        scrollTo("dashboard")
-      }, 400)
+      setAnalyzing(false)
+      // Transition to Stage 2: Hospital Selection
+      setFlowState("HOSPITAL_SELECTION")
     } catch (err) {
       console.error("Analysis pipeline failed:", err)
       setAnalyzing(false)
     }
+  }
+
+  const handleChooseHospital = async (hosp: HospitalMatch) => {
+    setSelectedHospital(hosp)
+    if (policy) {
+      try {
+        const simRes = await fetch("http://localhost:8000/api/v1/matching/deduction-simulate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            policy_id: policy.id,
+            hospital_id: hosp.id,
+            procedure_code: selectedProcedure,
+            room_category: selectedRoomCategory,
+            days_of_stay: 4
+          })
+        })
+        const simData: DeductionSimResult = await simRes.json()
+        setDeductionResult(simData)
+      } catch (e) {
+        console.error(e)
+      }
+    }
+    setFlowState("PERSONALIZED_DASHBOARD")
+    setActiveSection("dashboard")
+    window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
   const updateDeductionSimulation = async (hospId: number, procCode: string, roomCat: string) => {
@@ -194,7 +218,7 @@ export default function SinglePageApp() {
         body: JSON.stringify({
           message: userText,
           policy_id: policy?.id || 1,
-          hospital_id: selectedHospitalId || 1
+          hospital_id: selectedHospital?.id || 1
         })
       })
       const data = await res.json()
@@ -214,82 +238,95 @@ export default function SinglePageApp() {
   }
 
   const navItems = [
-    { id: "start-policy", label: "1. Policy Ingestion", icon: Upload },
-    { id: "dashboard", label: "2. Patient Dashboard", icon: Activity },
-    { id: "policy-analysis", label: "3. Policy Analysis", icon: FileText },
-    { id: "hospitals", label: "4. Hospital Matches", icon: Building2 },
-    { id: "coverage", label: "5. Deduction Simulator", icon: HeartPulse },
-    { id: "journey", label: "6. Care Journey", icon: Stethoscope },
-    { id: "chat", label: "7. Patient AI", icon: Sparkles },
-    { id: "audit", label: "8. Data Audit", icon: ShieldCheck },
-    { id: "sources", label: "9. Data Sources", icon: Database },
-    { id: "fhir", label: "10. FHIR / NHCX", icon: FileCode }
+    { id: "dashboard", label: "1. Overview Dashboard", icon: Activity },
+    { id: "policy-analysis", label: "2. Policy Constraints", icon: FileText },
+    { id: "hospital-profile", label: "3. Hospital Profile", icon: Building2 },
+    { id: "coverage", label: "4. Deduction Simulator", icon: HeartPulse },
+    { id: "journey", label: "5. Care Journey", icon: Stethoscope },
+    { id: "chat", label: "6. Patient AI", icon: Sparkles },
+    { id: "audit", label: "7. Data Audit", icon: ShieldCheck },
+    { id: "sources", label: "8. Data Sources", icon: Database },
+    { id: "fhir", label: "9. FHIR / NHCX", icon: FileCode }
   ]
 
-  return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex">
-      <aside className="w-72 bg-slate-900 text-slate-100 flex flex-col fixed inset-y-0 left-0 z-50 shadow-xl">
-        <div className="p-5 border-b border-slate-800 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center font-black text-white text-xl shadow-md shadow-blue-500/30">
-            H
+  // =========================================================================
+  // STAGE 1 VIEW: POLICY INGESTION
+  // =========================================================================
+  if (flowState === "UPLOAD") {
+    return (
+      <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col items-center justify-center p-6">
+        <div className="w-full max-w-4xl space-y-8">
+          {/* Brand Header */}
+          <div className="text-center space-y-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 border border-blue-200 rounded-full text-xs font-bold text-blue-700">
+              <Sparkles className="w-3.5 h-3.5" /> GE Healthcare Precision Care Challenge 2026
+            </div>
+            <h1 className="text-4xl font-extrabold tracking-tight text-slate-900">HOSPITALITY</h1>
+            <p className="text-slate-600 text-sm max-w-lg mx-auto">
+              Policy-Aware Healthcare Navigation, Cashless Empanelment & Proportionate Deduction Intelligence
+            </p>
           </div>
-          <div>
-            <div className="font-extrabold tracking-tight text-white text-lg">HOSPITALITY</div>
-            <div className="text-xs text-blue-400 font-medium tracking-wide">GE Healthcare Precision Care</div>
-          </div>
-        </div>
-        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-          <div className="text-xs font-semibold uppercase tracking-wider text-slate-400 px-3 mb-2">Navigation Stages</div>
-          {navItems.map(item => {
-            const Icon = item.icon
-            const active = activeSection === item.id
-            return (
-              <button
-                key={item.id}
-                onClick={() => scrollTo(item.id)}
-                className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all text-left ${active ? "bg-blue-600 text-white shadow-md shadow-blue-600/30 font-semibold" : "text-slate-300 hover:bg-slate-800 hover:text-white"}`}
-              >
-                <Icon className={`w-4 h-4 ${active ? "text-white" : "text-slate-400"}`} />
-                {item.label}
-              </button>
-            )
-          })}
-        </nav>
-        <div className="p-4 border-t border-slate-800 bg-slate-950/60 text-xs space-y-2">
-          <div className="flex items-center justify-between text-slate-400">
-            <span>System State</span>
-            <span className="flex items-center gap-1.5 text-emerald-400 font-semibold">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Live :8000
-            </span>
-          </div>
-          <div className="text-[11px] text-slate-400 leading-tight">Decision-support only. Non-binding indicative estimates.</div>
-        </div>
-      </aside>
 
-      <main className="flex-1 ml-72 p-8 max-w-6xl mx-auto space-y-16">
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-start gap-3 text-sm text-blue-900 shadow-sm">
-          <Info className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
-          <div className="leading-relaxed">
-            <strong className="font-semibold">GE Healthcare Precision Care Challenge 2026 — Decision-Support Disclaimer:</strong> HOSPITALITY assists patients and caregivers in evaluating policy constraints, room rent caps, and empanelled facilities. It does not issue clinical diagnoses or legally binding insurance claim pre-authorizations.
-          </div>
-        </div>
+          {/* Patient Details & Upload Card */}
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-xl p-8 space-y-6">
+            {/* Patient Header Inputs */}
+            <div className="border-b border-slate-100 pb-5">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
+                <User className="w-4 h-4 text-blue-600" /> Patient Profile
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+                <div>
+                  <label className="block text-slate-500 font-semibold mb-1">Patient Name</label>
+                  <input 
+                    type="text" 
+                    value={patientName} 
+                    onChange={(e) => setPatientName(e.target.value)} 
+                    className="w-full font-bold p-2 rounded-lg border border-slate-200 bg-slate-50 text-slate-900" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-500 font-semibold mb-1">Age</label>
+                  <input 
+                    type="text" 
+                    value={patientAge} 
+                    onChange={(e) => setPatientAge(e.target.value)} 
+                    className="w-full font-bold p-2 rounded-lg border border-slate-200 bg-slate-50 text-slate-900" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-500 font-semibold mb-1">Gender</label>
+                  <select 
+                    value={patientGender} 
+                    onChange={(e) => setPatientGender(e.target.value)} 
+                    className="w-full font-bold p-2 rounded-lg border border-slate-200 bg-slate-50 text-slate-900"
+                  >
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-slate-500 font-semibold mb-1">ABHA Health ID</label>
+                  <input 
+                    type="text" 
+                    value={patientAbha} 
+                    onChange={(e) => setPatientAbha(e.target.value)} 
+                    className="w-full font-bold p-2 rounded-lg border border-slate-200 bg-slate-50 text-slate-900" 
+                  />
+                </div>
+              </div>
+            </div>
 
-        {/* SECTION 1: START WITH YOUR POLICY */}
-        <section id="start-policy" className="scroll-mt-8 space-y-6">
-          <div className="border-b border-slate-200 pb-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">Stage 1 — Policy Ingestion</span>
-            <h2 className="text-3xl font-extrabold text-slate-900 mt-2">Start With Your Policy</h2>
-            <p className="text-slate-600 text-sm mt-1">Upload your health insurance policy certificate or schedule (PDF or JSON). HOSPITALITY extracts your constraints without manual data entry.</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="md:col-span-2 border-2 border-dashed border-slate-300 rounded-2xl p-8 bg-white text-center hover:border-blue-500 transition-all flex flex-col items-center justify-center space-y-4 shadow-sm">
+            {/* Upload Box */}
+            <div className="border-2 border-dashed border-slate-300 rounded-2xl p-8 text-center hover:border-blue-500 transition-all flex flex-col items-center justify-center space-y-4">
               <div className="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
                 <Upload className="w-7 h-7" />
               </div>
               <div>
-                <h3 className="font-bold text-slate-800 text-base">Upload Policy Certificate / Schedule</h3>
-                <p className="text-xs text-slate-500 mt-1">Supports PDF, JSON, or OCR-scanned policy documents</p>
+                <h3 className="font-bold text-slate-800 text-base">Upload Health Insurance Policy (PDF / JSON)</h3>
+                <p className="text-xs text-slate-500 mt-1">Upload your policy schedule to extract Sum Insured, Room Rent Caps, and Cashless Eligibility.</p>
               </div>
+
               {uploadedFile ? (
                 <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 flex items-center gap-3 text-emerald-800 text-sm w-full max-w-md justify-between">
                   <div className="flex items-center gap-2 truncate">
@@ -320,76 +357,250 @@ export default function SinglePageApp() {
                   </button>
                 </div>
               )}
+
               {uploadedFile && (
                 <button
                   onClick={runAnalysisPipeline}
                   disabled={analyzing}
-                  className="w-full max-w-md bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-bold text-sm py-3 rounded-xl shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2 mt-2"
+                  className="w-full max-w-md bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-bold text-sm py-3.5 rounded-xl shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2 mt-2"
                 >
                   {analyzing ? (
                     <>
                       <RefreshCw className="w-4 h-4 animate-spin" />
-                      Analyzing Policy & Matching Ecosystem...
+                      Analyzing Policy & Discovering Compatible Facilities...
                     </>
                   ) : (
                     <>
                       <Sparkles className="w-4 h-4" />
-                      ANALYSE POLICY & MATCH HOSPITALS
+                      ANALYSE POLICY & DISCOVER HOSPITALS →
                     </>
                   )}
                 </button>
               )}
             </div>
-            <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between">
-              <div>
-                <h4 className="font-bold text-slate-900 text-sm flex items-center gap-2 mb-4">
-                  <Layers className="w-4 h-4 text-blue-600" />
-                  Real-time Policy Pipeline
-                </h4>
-                <div className="space-y-3 text-xs">
-                  <div className={`flex items-center gap-2.5 ${analysisStep >= 1 ? "text-emerald-700 font-semibold" : "text-slate-400"}`}>
-                    {analysisStep >= 1 ? <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> : <div className="w-4 h-4 rounded-full border border-slate-300 shrink-0" />}
-                    <span>1. Document uploaded & OCR scanned</span>
-                  </div>
-                  <div className={`flex items-center gap-2.5 ${analysisStep >= 2 ? "text-emerald-700 font-semibold" : "text-slate-400"}`}>
-                    {analysisStep >= 2 ? <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> : <div className="w-4 h-4 rounded-full border border-slate-300 shrink-0" />}
-                    <span>2. Extracting Sum Insured & Room Caps</span>
-                  </div>
-                  <div className={`flex items-center gap-2.5 ${analysisStep >= 3 ? "text-emerald-700 font-semibold" : "text-slate-400"}`}>
-                    {analysisStep >= 3 ? <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> : <div className="w-4 h-4 rounded-full border border-slate-300 shrink-0" />}
-                    <span>3. Identifying Copay & Exclusions</span>
-                  </div>
-                  <div className={`flex items-center gap-2.5 ${analysisStep >= 4 ? "text-emerald-700 font-semibold" : "text-slate-400"}`}>
-                    {analysisStep >= 4 ? <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> : <div className="w-4 h-4 rounded-full border border-slate-300 shrink-0" />}
-                    <span>4. Searching Cashless Networks</span>
-                  </div>
-                  <div className={`flex items-center gap-2.5 ${analysisStep >= 5 ? "text-emerald-700 font-semibold" : "text-slate-400"}`}>
-                    {analysisStep >= 5 ? <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> : <div className="w-4 h-4 rounded-full border border-slate-300 shrink-0" />}
-                    <span>5. Calculating Proportionate Deductions</span>
-                  </div>
-                  <div className={`flex items-center gap-2.5 ${analysisStep >= 6 ? "text-emerald-700 font-semibold" : "text-slate-400"}`}>
-                    {analysisStep >= 6 ? <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> : <div className="w-4 h-4 rounded-full border border-slate-300 shrink-0" />}
-                    <span>6. Ranking Options & Telemetry Check</span>
-                  </div>
+
+            {/* Stepper if analyzing */}
+            {analyzing && (
+              <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-2 text-xs">
+                <div className={`flex items-center gap-2 ${analysisStep >= 1 ? "text-emerald-700 font-semibold" : "text-slate-400"}`}>
+                  {analysisStep >= 1 ? <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> : <div className="w-4 h-4 rounded-full border border-slate-300 shrink-0" />}
+                  <span>1. Reading policy schedule text via OCR & NLP</span>
+                </div>
+                <div className={`flex items-center gap-2 ${analysisStep >= 2 ? "text-emerald-700 font-semibold" : "text-slate-400"}`}>
+                  {analysisStep >= 2 ? <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> : <div className="w-4 h-4 rounded-full border border-slate-300 shrink-0" />}
+                  <span>2. Extracting Sum Insured (₹5,00,000) & Room Rent Caps (₹5,000/day)</span>
+                </div>
+                <div className={`flex items-center gap-2 ${analysisStep >= 4 ? "text-emerald-700 font-semibold" : "text-slate-400"}`}>
+                  {analysisStep >= 4 ? <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> : <div className="w-4 h-4 rounded-full border border-slate-300 shrink-0" />}
+                  <span>3. Searching Cashless Empanelled Network across Bengaluru</span>
+                </div>
+                <div className={`flex items-center gap-2 ${analysisStep >= 6 ? "text-emerald-700 font-semibold" : "text-slate-400"}`}>
+                  {analysisStep >= 6 ? <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> : <div className="w-4 h-4 rounded-full border border-slate-300 shrink-0" />}
+                  <span>4. Ranking Compatible Facilities by Room Fit & Live Beds</span>
                 </div>
               </div>
-              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                <span className="text-slate-500">Pipeline Status:</span>
-                <span className={`font-bold px-2 py-0.5 rounded ${analysisComplete ? "bg-emerald-100 text-emerald-800" : (analyzing ? "bg-blue-100 text-blue-800 animate-pulse" : "bg-slate-100 text-slate-600")}`}>
-                  {analysisComplete ? "ANALYSIS COMPLETE" : (analyzing ? "PROCESSING..." : "AWAITING UPLOAD")}
-                </span>
+            )}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // =========================================================================
+  // STAGE 2 VIEW: HOSPITAL SELECTION
+  // =========================================================================
+  if (flowState === "HOSPITAL_SELECTION") {
+    return (
+      <div className="min-h-screen bg-slate-50 text-slate-900 p-8 max-w-5xl mx-auto space-y-8">
+        {/* Top Active Policy & Patient Context Banner */}
+        <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-blue-500/20">
+              {patientName.charAt(0)}
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h2 className="text-lg font-extrabold text-slate-900">{patientName}</h2>
+                <span className="text-xs bg-slate-100 text-slate-700 font-semibold px-2 py-0.5 rounded">{patientAge} Yrs, {patientGender}</span>
+                <span className="text-xs bg-blue-50 text-blue-800 font-semibold px-2 py-0.5 rounded">ABHA: {patientAbha}</span>
               </div>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Policy: <strong>{policy?.insurer}</strong> ({policy?.policy_number}) • Sum Insured: <strong>₹{policy?.sum_insured.toLocaleString("en-IN")}</strong> • Room Cap: <strong>₹{policy?.room_rent_limit.toLocaleString("en-IN")}/day</strong>
+              </p>
             </div>
           </div>
-        </section>
+          <button
+            onClick={() => setFlowState("UPLOAD")}
+            className="text-xs text-slate-600 hover:text-slate-900 font-semibold px-3.5 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 transition-all flex items-center gap-1.5 shrink-0"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" /> Change Policy
+          </button>
+        </div>
 
-        {/* SECTION 2: DYNAMIC PATIENT DASHBOARD */}
+        {/* Selection Prompt */}
+        <div className="space-y-1">
+          <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">
+            Stage 2 — Facility Selection
+          </span>
+          <h2 className="text-3xl font-extrabold text-slate-900 pt-2">Choose a Compatible Hospital</h2>
+          <p className="text-slate-600 text-sm">
+            Based on {patientName}'s <strong>{policy?.insurer}</strong> policy, select a hospital below to generate your personalized cost breakdown, room rent fit, and care journey.
+          </p>
+        </div>
+
+        {/* Hospital Cards List */}
+        <div className="space-y-4">
+          {hospitals.map((h, idx) => (
+            <div
+              key={h.id}
+              className="bg-white rounded-2xl border border-slate-200 hover:border-blue-500 hover:shadow-lg transition-all p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-sm"
+            >
+              <div className="space-y-2 flex-1">
+                <div className="flex items-center gap-3 flex-wrap">
+                  <span className="w-7 h-7 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs">
+                    #{idx + 1}
+                  </span>
+                  <h3 className="font-extrabold text-slate-900 text-lg">{h.name}</h3>
+                  <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${h.network_status === "CASHLESS_NETWORK" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"}`}>
+                    {h.network_status === "CASHLESS_NETWORK" ? "✓ CASHLESS PREFERRED" : "REIMBURSEMENT ONLY"}
+                  </span>
+                </div>
+
+                <p className="text-xs text-slate-500 flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                  {h.address}, {h.city}
+                </p>
+
+                <div className="flex flex-wrap gap-2 pt-1">
+                  {h.reasons.map((r, ri) => (
+                    <span key={ri} className="text-[11px] bg-slate-100 text-slate-700 font-medium px-2.5 py-0.5 rounded-md">• {r}</span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Score & Action Button */}
+              <div className="flex md:flex-col items-center md:items-end justify-between w-full md:w-auto gap-3 shrink-0 border-t md:border-t-0 pt-4 md:pt-0 border-slate-100">
+                <div className="text-right">
+                  <div className="text-xs text-slate-500 font-semibold uppercase">Match Score</div>
+                  <div className="text-2xl font-black text-blue-600">{h.match_score}%</div>
+                  <span className="text-[10px] text-purple-800 font-bold bg-purple-100 px-2 py-0.5 rounded mt-0.5 inline-block">
+                    {h.available_beds} Free ({h.available_icu_beds} ICU)
+                  </span>
+                </div>
+
+                <button
+                  onClick={() => handleChooseHospital(h)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-md shadow-blue-600/30 transition-all flex items-center gap-1.5 whitespace-nowrap"
+                >
+                  <span>Select & Open Dashboard</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  // =========================================================================
+  // STAGE 3 VIEW: PERSONALIZED PATIENT DASHBOARD & FULL SUITE
+  // =========================================================================
+  return (
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex">
+      {/* STICKY LEFT SIDEBAR */}
+      <aside className="w-72 bg-slate-900 text-slate-100 flex flex-col fixed inset-y-0 left-0 z-50 shadow-xl">
+        <div className="p-5 border-b border-slate-800 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center font-black text-white text-xl shadow-md shadow-blue-500/30">
+            H
+          </div>
+          <div>
+            <div className="font-extrabold tracking-tight text-white text-lg">HOSPITALITY</div>
+            <div className="text-xs text-blue-400 font-medium tracking-wide">GE Healthcare Precision Care</div>
+          </div>
+        </div>
+
+        {/* Patient Pill in Sidebar */}
+        <div className="p-4 bg-slate-950/80 border-b border-slate-800 space-y-1">
+          <div className="text-[10px] uppercase font-bold text-slate-400">Active Patient</div>
+          <div className="font-bold text-sm text-white truncate">{patientName}</div>
+          <div className="text-xs text-blue-400 truncate">{selectedHospital?.name.split(",")[0]}</div>
+        </div>
+
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          <div className="text-xs font-semibold uppercase tracking-wider text-slate-400 px-3 mb-2">Navigation Stages</div>
+          {navItems.map(item => {
+            const Icon = item.icon
+            const active = activeSection === item.id
+            return (
+              <button
+                key={item.id}
+                onClick={() => scrollTo(item.id)}
+                className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all text-left ${active ? "bg-blue-600 text-white shadow-md shadow-blue-600/30 font-semibold" : "text-slate-300 hover:bg-slate-800 hover:text-white"}`}
+              >
+                <Icon className={`w-4 h-4 ${active ? "text-white" : "text-slate-400"}`} />
+                {item.label}
+              </button>
+            )
+          })}
+        </nav>
+
+        <div className="p-4 border-t border-slate-800 bg-slate-950/60 text-xs space-y-2">
+          <div className="flex items-center justify-between text-slate-400">
+            <span>System State</span>
+            <span className="flex items-center gap-1.5 text-emerald-400 font-semibold">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Live :8000
+            </span>
+          </div>
+          <div className="text-[11px] text-slate-400 leading-tight">Decision-support only. Non-binding indicative estimates.</div>
+        </div>
+      </aside>
+
+      {/* MAIN CONTENT SCROLL AREA */}
+      <main className="flex-1 ml-72 p-8 max-w-6xl mx-auto space-y-16">
+        {/* TOP PERSONALIZED CONTEXT & CHANGE HOSPITAL BAR */}
+        <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-blue-500/20 shrink-0">
+              {patientName.charAt(0)}
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h2 className="text-lg font-extrabold text-slate-900">{patientName}</h2>
+                <span className="text-xs bg-slate-100 text-slate-700 font-semibold px-2 py-0.5 rounded">{patientAge} Yrs, {patientGender}</span>
+                <span className="text-xs bg-emerald-50 text-emerald-800 font-bold px-2 py-0.5 rounded">🏥 {selectedHospital?.name.split(",")[0]}</span>
+              </div>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Policy: <strong>{policy?.insurer}</strong> ({policy?.policy_number}) • Room Rent Cap: <strong>₹{policy?.room_rent_limit.toLocaleString("en-IN")}/day</strong>
+              </p>
+            </div>
+          </div>
+
+          <div className="flex gap-2 shrink-0">
+            <button
+              onClick={() => setFlowState("HOSPITAL_SELECTION")}
+              className="bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow transition-all flex items-center gap-1.5"
+            >
+              <ArrowLeftRight className="w-3.5 h-3.5 text-blue-400" />
+              <span>Change Hospital</span>
+            </button>
+            <button
+              onClick={() => setFlowState("UPLOAD")}
+              className="text-xs text-slate-600 hover:text-slate-900 font-semibold px-3 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 transition-all"
+            >
+              Switch Policy
+            </button>
+          </div>
+        </div>
+
+        {/* SECTION 1: PERSONALIZED OVERVIEW DASHBOARD */}
         <section id="dashboard" className="scroll-mt-8 space-y-6">
           <div className="border-b border-slate-200 pb-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">Stage 2 — Dynamic Overview</span>
-            <h2 className="text-3xl font-extrabold text-slate-900 mt-2">Patient Decision Dashboard</h2>
-            <p className="text-slate-600 text-sm mt-1">Dynamic summary populated directly from your extracted policy constraints and matched healthcare network.</p>
+            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">Personalized Command Center</span>
+            <h2 className="text-3xl font-extrabold text-slate-900 mt-2">Executive Admission Summary</h2>
+            <p className="text-slate-600 text-sm mt-1">Real-time parameters generated specifically for {patientName} at {selectedHospital?.name}.</p>
           </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
               <div className="flex items-center justify-between text-slate-500 mb-2">
@@ -397,40 +608,43 @@ export default function SinglePageApp() {
                 <FileText className="w-4 h-4 text-blue-600" />
               </div>
               <div>
-                <div className="text-xl font-black text-slate-900">{policy ? policy.policy_number : "No policy uploaded"}</div>
-                <p className="text-xs text-slate-500 mt-1 font-medium">{policy ? `${policy.insurer}` : "Upload policy above to activate"}</p>
+                <div className="text-xl font-black text-slate-900">{policy?.policy_number}</div>
+                <p className="text-xs text-slate-500 mt-1 font-medium">{policy?.insurer}</p>
               </div>
               <div className="mt-3 pt-2 border-t border-slate-100 text-[11px] text-blue-600 font-semibold">
-                {policy ? `Sum Insured: ₹${policy.sum_insured.toLocaleString("en-IN")}` : "Awaiting input"}
+                Sum Insured: ₹{policy?.sum_insured.toLocaleString("en-IN")}
               </div>
             </div>
+
             <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
               <div className="flex items-center justify-between text-slate-500 mb-2">
-                <span className="text-xs font-semibold uppercase tracking-wider">Recommended Hospitals</span>
+                <span className="text-xs font-semibold uppercase tracking-wider">Selected Facility</span>
                 <Building2 className="w-4 h-4 text-emerald-600" />
               </div>
               <div>
-                <div className="text-xl font-black text-slate-900">{hospitals.length > 0 ? `${hospitals.length} Facilities` : "—"}</div>
-                <p className="text-xs text-slate-500 mt-1 font-medium">{hospitals.length > 0 ? "Cashless empanelled in Bengaluru" : "Run analysis to rank"}</p>
+                <div className="text-xl font-black text-slate-900 truncate">{selectedHospital?.name.split(",")[0]}</div>
+                <p className="text-xs text-slate-500 mt-1 font-medium">{selectedHospital?.network_status === "CASHLESS_NETWORK" ? "Cashless Preferred" : "Reimbursement"}</p>
               </div>
               <div className="mt-3 pt-2 border-t border-slate-100 text-[11px] text-emerald-600 font-semibold">
-                {hospitals.length > 0 ? `Top Match: ${hospitals[0].name.split(",")[0]}` : "Awaiting analysis"}
+                Match Score: {selectedHospital?.match_score}%
               </div>
             </div>
+
             <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
               <div className="flex items-center justify-between text-slate-500 mb-2">
-                <span className="text-xs font-semibold uppercase tracking-wider">Bed Telemetry</span>
+                <span className="text-xs font-semibold uppercase tracking-wider">Live Bed Feeds</span>
                 <Bed className="w-4 h-4 text-purple-600" />
               </div>
               <div>
-                <div className="text-xl font-black text-slate-900">{hospitals.length > 0 ? `${hospitals[0].available_beds} Available` : "—"}</div>
-                <p className="text-xs text-slate-500 mt-1 font-medium">{hospitals.length > 0 ? `${hospitals[0].available_icu_beds} ICU beds unoccupied` : "Live bed feed standby"}</p>
+                <div className="text-xl font-black text-slate-900">{selectedHospital?.available_beds} Available</div>
+                <p className="text-xs text-slate-500 mt-1 font-medium">{selectedHospital?.available_icu_beds} ICU beds unoccupied</p>
               </div>
               <div className="mt-3 pt-2 border-t border-slate-100 text-[11px] text-purple-700 font-bold flex items-center gap-1">
                 <span className="px-1.5 py-0.5 bg-purple-100 rounded text-[10px]">SIMULATED</span>
-                <span>Real-time stream</span>
+                <span>Live telemetry</span>
               </div>
             </div>
+
             <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
               <div className="flex items-center justify-between text-slate-500 mb-2">
                 <span className="text-xs font-semibold uppercase tracking-wider">Patient Out-of-Pocket</span>
@@ -438,28 +652,28 @@ export default function SinglePageApp() {
               </div>
               <div>
                 <div className="text-xl font-black text-slate-900">{deductionResult ? `₹${deductionResult.indicative_patient_out_of_pocket.toLocaleString("en-IN")}` : "—"}</div>
-                <p className="text-xs text-slate-500 mt-1 font-medium">{deductionResult ? `${deductionResult.room_category.replace("_", " ")} Room` : "Based on selected room"}</p>
+                <p className="text-xs text-slate-500 mt-1 font-medium">{selectedRoomCategory.replace("_", " ")} Room</p>
               </div>
               <div className="mt-3 pt-2 border-t border-slate-100 text-[11px] text-amber-700 font-semibold">
-                {deductionResult ? (deductionResult.is_room_capped ? "⚠️ Breach Penalty Included" : "✓ Zero Room Penalty") : "Awaiting calculation"}
+                {deductionResult?.is_room_capped ? "⚠️ Breach Penalty Active" : "✓ Optimal Room Fit"}
               </div>
             </div>
           </div>
         </section>
 
-        {/* SECTION 3: EXTRACTED POLICY CONSTRAINTS */}
+        {/* SECTION 2: POLICY ANALYSIS */}
         <section id="policy-analysis" className="scroll-mt-8 space-y-6">
           <div className="border-b border-slate-200 pb-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">Stage 3 — Policy Understanding</span>
-            <h2 className="text-3xl font-extrabold text-slate-900 mt-2">Policy Constraints & Clause Citations</h2>
-            <p className="text-slate-600 text-sm mt-1">Deterministic parameters parsed from the insurance schedule with exact source page citations.</p>
+            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">Policy Understanding</span>
+            <h2 className="text-3xl font-extrabold text-slate-900 mt-2">Policy Constraints & Citations</h2>
+            <p className="text-slate-600 text-sm mt-1">Deterministic limits extracted from {patientName}'s insurance schedule.</p>
           </div>
-          {policy ? (
+          {policy && (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-5">
                 <h3 className="font-bold text-slate-900 text-base flex items-center justify-between">
                   <span>Structured Policy Limits</span>
-                  <span className="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full">{policy.extraction_confidence * 100}% Confidence Score</span>
+                  <span className="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full">{policy.extraction_confidence * 100}% Confidence</span>
                 </h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs">
                   <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
@@ -487,7 +701,7 @@ export default function SinglePageApp() {
                     <span className="text-[10px] text-slate-500 font-medium">Nil deductible</span>
                   </div>
                   <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
-                    <span className="text-slate-500 font-medium">Room Category Cap</span>
+                    <span className="text-slate-500 font-medium">Allowed Room Type</span>
                     <div className="text-base font-bold text-slate-900 mt-1">Single Private A/C</div>
                   </div>
                 </div>
@@ -507,8 +721,7 @@ export default function SinglePageApp() {
               <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between">
                 <div>
                   <h3 className="font-bold text-slate-900 text-sm mb-3 flex items-center gap-2">
-                    <AlertTriangle className="w-4 h-4 text-amber-500" />
-                    Identified Policy Exclusions
+                    <AlertTriangle className="w-4 h-4 text-amber-500" /> Policy Exclusions
                   </h3>
                   <div className="space-y-2 text-xs">
                     {policy.exclusions.map((ex, i) => (
@@ -520,100 +733,47 @@ export default function SinglePageApp() {
                   </div>
                 </div>
                 <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-[11px] text-slate-600 mt-4 leading-tight">
-                  💡 <strong>Rule Engine Note:</strong> Room rent capping dictates whether proportionate deductions apply to doctors' fees and surgical OT charges.
+                  💡 <strong>Rule Note:</strong> Room rent capping dictates whether proportionate deductions apply to doctors' fees.
                 </div>
               </div>
             </div>
-          ) : (
-            <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center text-slate-400">
-              <FileText className="w-12 h-12 mx-auto text-slate-300 mb-3" />
-              <p className="text-sm font-medium">Please upload a policy in Stage 1 to extract structured constraints.</p>
-            </div>
           )}
         </section>
 
-        {/* SECTION 4: HOSPITAL DISCOVERY */}
-        <section id="hospitals" className="scroll-mt-8 space-y-6">
+        {/* SECTION 3: HOSPITAL PROFILE DEEP-DIVE */}
+        <section id="hospital-profile" className="scroll-mt-8 space-y-6">
           <div className="border-b border-slate-200 pb-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">Stage 4 — Hospital Discovery</span>
-            <h2 className="text-3xl font-extrabold text-slate-900 mt-2">Compatible Empanelled Hospitals</h2>
-            <p className="text-slate-600 text-sm mt-1">Multi-criteria matching scores based on Cashless Network status, Room Rent fit, Distance, and Live Bed Availability.</p>
+            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">Facility Deep-Dive</span>
+            <h2 className="text-3xl font-extrabold text-slate-900 mt-2">{selectedHospital?.name}</h2>
+            <p className="text-slate-600 text-sm mt-1">Detailed room rate card, empanelment status, and facility services.</p>
           </div>
-          {hospitals.length > 0 ? (
-            <div className="space-y-4">
-              {hospitals.map((h, idx) => (
-                <div
-                  key={h.id}
-                  onClick={() => {
-                    setSelectedHospitalId(h.id)
-                    updateDeductionSimulation(h.id, selectedProcedure, selectedRoomCategory)
-                  }}
-                  className={`p-6 rounded-2xl border transition-all cursor-pointer bg-white shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6 ${selectedHospitalId === h.id ? "border-blue-600 ring-2 ring-blue-600/20 shadow-md" : "border-slate-200 hover:border-slate-300"}`}
-                >
-                  <div className="space-y-2 flex-1">
-                    <div className="flex items-center gap-3 flex-wrap">
-                      <span className="w-7 h-7 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs">#{idx + 1}</span>
-                      <h3 className="font-extrabold text-slate-900 text-lg">{h.name}</h3>
-                      <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${h.network_status === "CASHLESS_NETWORK" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"}`}>
-                        {h.network_status === "CASHLESS_NETWORK" ? "✓ CASHLESS PREFERRED" : "REIMBURSEMENT ONLY"}
-                      </span>
-                    </div>
-                    <p className="text-xs text-slate-500 flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                      {h.address}, {h.city}
-                    </p>
-                    <div className="flex flex-wrap gap-2 pt-1">
-                      {h.reasons.map((r, ri) => (
-                        <span key={ri} className="text-[11px] bg-slate-100 text-slate-700 font-medium px-2.5 py-0.5 rounded-md">• {r}</span>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex md:flex-col items-center md:items-end justify-between w-full md:w-auto gap-4 border-t md:border-t-0 pt-3 md:pt-0 border-slate-100 shrink-0">
-                    <div className="text-right">
-                      <div className="text-xs text-slate-500 font-semibold uppercase">Match Score</div>
-                      <div className="text-2xl font-black text-blue-600">{h.match_score}%</div>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-[11px] text-purple-800 font-bold bg-purple-100 px-2 py-0.5 rounded">{h.available_beds} Beds Free ({h.available_icu_beds} ICU)</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                <span className="text-slate-500 font-medium">Facility Address</span>
+                <div className="font-bold text-slate-900 text-sm mt-1">{selectedHospital?.address}, {selectedHospital?.city}</div>
+              </div>
+              <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-200">
+                <span className="text-emerald-700 font-medium">Network Status for {policy?.insurer}</span>
+                <div className="font-bold text-emerald-900 text-sm mt-1">{selectedHospital?.network_status === "CASHLESS_NETWORK" ? "Cashless Preferred (Zero Upfront)" : "Reimbursement Only"}</div>
+              </div>
+              <div className="p-4 bg-purple-50 rounded-xl border border-purple-200">
+                <span className="text-purple-700 font-medium">Live Bed Telemetry</span>
+                <div className="font-bold text-purple-900 text-sm mt-1">{selectedHospital?.available_beds} General Beds, {selectedHospital?.available_icu_beds} ICU Beds Free</div>
+              </div>
             </div>
-          ) : (
-            <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center text-slate-400">
-              <Building2 className="w-12 h-12 mx-auto text-slate-300 mb-3" />
-              <p className="text-sm font-medium">Please upload and analyse your policy in Stage 1 to discover compatible hospitals.</p>
-            </div>
-          )}
+          </div>
         </section>
 
-        {/* SECTION 5: PROPORTIONATE DEDUCTION CALCULATOR */}
+        {/* SECTION 4: PROPORTIONATE DEDUCTION CALCULATOR */}
         <section id="coverage" className="scroll-mt-8 space-y-6">
           <div className="border-b border-slate-200 pb-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">Stage 5 — Cost & Coverage Intelligence</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">Financial Transparency</span>
             <h2 className="text-3xl font-extrabold text-slate-900 mt-2">Proportionate Deduction Simulator</h2>
-            <p className="text-slate-600 text-sm mt-1">Interactive mathematical simulator demonstrating how room category selection triggers or prevents IRDAI proportionate deduction penalties.</p>
+            <p className="text-slate-600 text-sm mt-1">Interactive mathematical simulator demonstrating how room category selection triggers or prevents penalties.</p>
           </div>
           <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pb-6 border-b border-slate-100">
-              <div>
-                <label className="block text-xs font-bold uppercase text-slate-500 mb-1.5">Select Facility</label>
-                <select
-                  value={selectedHospitalId}
-                  onChange={(e) => {
-                    const id = Number(e.target.value)
-                    setSelectedHospitalId(id)
-                    updateDeductionSimulation(id, selectedProcedure, selectedRoomCategory)
-                  }}
-                  className="w-full text-xs font-semibold p-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-900"
-                >
-                  <option value={1}>Apollo Hospitals, Bannerghatta Road</option>
-                  <option value={2}>Manipal Hospital, Old Airport Road</option>
-                  <option value={3}>Sri Jayadeva Institute of Cardiology</option>
-                  <option value={6}>Narayana Institute of Cardiac Sciences</option>
-                </select>
-              </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-6 border-b border-slate-100">
               <div>
                 <label className="block text-xs font-bold uppercase text-slate-500 mb-1.5">Procedure</label>
                 <select
@@ -621,7 +781,7 @@ export default function SinglePageApp() {
                   onChange={(e) => {
                     const p = e.target.value
                     setSelectedProcedure(p)
-                    updateDeductionSimulation(selectedHospitalId, p, selectedRoomCategory)
+                    if (selectedHospital) updateDeductionSimulation(selectedHospital.id, p, selectedRoomCategory)
                   }}
                   className="w-full text-xs font-semibold p-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-900"
                 >
@@ -638,7 +798,7 @@ export default function SinglePageApp() {
                   onChange={(e) => {
                     const r = e.target.value
                     setSelectedRoomCategory(r)
-                    updateDeductionSimulation(selectedHospitalId, selectedProcedure, r)
+                    if (selectedHospital) updateDeductionSimulation(selectedHospital.id, selectedProcedure, r)
                   }}
                   className="w-full text-xs font-semibold p-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-900"
                 >
@@ -649,7 +809,8 @@ export default function SinglePageApp() {
                 </select>
               </div>
             </div>
-            {deductionResult ? (
+
+            {deductionResult && (
               <div className="space-y-6">
                 <div className={`p-4 rounded-xl border flex items-start gap-3 text-sm ${deductionResult.is_room_capped ? "bg-amber-50 border-amber-200 text-amber-900" : "bg-emerald-50 border-emerald-200 text-emerald-900"}`}>
                   <AlertTriangle className={`w-5 h-5 shrink-0 mt-0.5 ${deductionResult.is_room_capped ? "text-amber-600" : "text-emerald-600"}`} />
@@ -711,18 +872,16 @@ export default function SinglePageApp() {
                   </div>
                 </div>
               </div>
-            ) : (
-              <div className="text-center py-6 text-slate-400 text-xs">Run policy analysis in Stage 1 to activate calculation proof.</div>
             )}
           </div>
         </section>
 
-        {/* SECTION 6: CARE JOURNEY */}
+        {/* SECTION 5: CARE JOURNEY */}
         <section id="journey" className="scroll-mt-8 space-y-6">
           <div className="border-b border-slate-200 pb-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">Stage 6 — Care Journey Tracking</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">Patient Care Roadmap</span>
             <h2 className="text-3xl font-extrabold text-slate-900 mt-2">Patient Journey State Machine</h2>
-            <p className="text-slate-600 text-sm mt-1">Reactive lifecycle guidance advancing through admission milestones with pre-auth checklists.</p>
+            <p className="text-slate-600 text-sm mt-1">Lifecycle guidance tailored for {patientName} at {selectedHospital?.name.split(",")[0]}.</p>
           </div>
           <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6">
             <div className="grid grid-cols-2 sm:grid-cols-6 gap-2 text-center text-xs">
@@ -749,31 +908,31 @@ export default function SinglePageApp() {
                 <span className="text-xs font-bold uppercase tracking-wider text-blue-700">Active Milestone Checklist</span>
                 <span className="text-xs bg-blue-200 text-blue-900 font-bold px-2 py-0.5 rounded">Action Required</span>
               </div>
-              <h4 className="font-bold text-slate-900 text-sm">Pre-Authorization & TPA Verification at Apollo Hospitals</h4>
+              <h4 className="font-bold text-slate-900 text-sm">Pre-Authorization & TPA Verification at {selectedHospital?.name.split(",")[0]}</h4>
               <div className="space-y-2 text-xs text-slate-700">
                 <div className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-600" />
-                  <span>Submit Star Health E-Card & Aadhaar (ABHA ID: 91-8273-1928-1144) to Insurance Desk</span>
+                  <span>Submit Star Health E-Card & Aadhaar (ABHA: {patientAbha}) to Insurance Desk</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-600" />
-                  <span>Ensure treating doctor mentions Single Private A/C Room in admission note to prevent overage penalty</span>
+                  <span>Ensure treating doctor specifies Single Private A/C Room in admission slip</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-600" />
-                  <span>Obtain initial pre-authorization letter within 3 hours under IRDAI cashless turnaround SLA</span>
+                  <span>Obtain initial pre-authorization letter within 3 hours under IRDAI turnaround SLA</span>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* SECTION 7: PATIENT AI ASSISTANT */}
+        {/* SECTION 6: PATIENT AI ASSISTANT */}
         <section id="chat" className="scroll-mt-8 space-y-6">
           <div className="border-b border-slate-200 pb-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">Stage 7 — Patient Conversational AI</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">Patient Conversational AI</span>
             <h2 className="text-3xl font-extrabold text-slate-900 mt-2">Tool-Augmented Healthcare Assistant</h2>
-            <p className="text-slate-600 text-sm mt-1">Ask natural-language questions about your policy coverage, room limits, and hospital billing.</p>
+            <p className="text-slate-600 text-sm mt-1">Ask questions about {patientName}'s policy coverage and room limits at {selectedHospital?.name.split(",")[0]}.</p>
           </div>
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col h-[450px]">
             <div className="flex-1 p-6 overflow-y-auto space-y-4 text-xs">
@@ -800,14 +959,14 @@ export default function SinglePageApp() {
               )}
             </div>
             <div className="px-6 py-2 bg-slate-50 border-t border-slate-100 flex gap-2 overflow-x-auto text-[11px]">
-              <button onClick={() => setChatInput("Is a private room covered at Apollo?")} className="bg-white hover:bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-full text-slate-700 whitespace-nowrap">
-                "Is private room covered at Apollo?"
+              <button onClick={() => setChatInput(`Is a private room covered for ${patientName} at ${selectedHospital?.name.split(",")[0]}?`)} className="bg-white hover:bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-full text-slate-700 whitespace-nowrap">
+                "Is private room covered here?"
               </button>
               <button onClick={() => setChatInput("Why does Deluxe room cost more out of pocket?")} className="bg-white hover:bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-full text-slate-700 whitespace-nowrap">
                 "Why does Deluxe room cost more?"
               </button>
-              <button onClick={() => setChatInput("Which hospitals in Bangalore have cashless for Star Health?")} className="bg-white hover:bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-full text-slate-700 whitespace-nowrap">
-                "Which cashless hospitals in Bangalore?"
+              <button onClick={() => setChatInput("What documents are needed for cashless pre-auth?")} className="bg-white hover:bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-full text-slate-700 whitespace-nowrap">
+                "What documents for cashless?"
               </button>
             </div>
             <form onSubmit={handleSendMessage} className="p-4 border-t border-slate-200 flex gap-3">
@@ -826,10 +985,10 @@ export default function SinglePageApp() {
           </div>
         </section>
 
-        {/* SECTION 8: DATA AUDIT */}
+        {/* SECTION 7: DATA AUDIT */}
         <section id="audit" className="scroll-mt-8 space-y-6">
           <div className="border-b border-slate-200 pb-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">Stage 8 — Provenance & Verification</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">Provenance & Trust</span>
             <h2 className="text-3xl font-extrabold text-slate-900 mt-2">Data Audit & Provenance Transparency</h2>
             <p className="text-slate-600 text-sm mt-1">Transparent tagging distinguishing authoritative government registries from algorithmic simulations.</p>
           </div>
@@ -885,10 +1044,10 @@ export default function SinglePageApp() {
           </div>
         </section>
 
-        {/* SECTION 9: DATA SOURCES */}
+        {/* SECTION 8: DATA SOURCES */}
         <section id="sources" className="scroll-mt-8 space-y-6">
           <div className="border-b border-slate-200 pb-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">Stage 9 — Ecosystem Catalog</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">Ecosystem Catalog</span>
             <h2 className="text-3xl font-extrabold text-slate-900 mt-2">Integrated Healthcare Data Sources</h2>
             <p className="text-slate-600 text-sm mt-1">Federated Indian digital health registries and standardized master datasets.</p>
           </div>
@@ -911,10 +1070,10 @@ export default function SinglePageApp() {
           </div>
         </section>
 
-        {/* SECTION 10: FHIR & NHCX VIEWER */}
+        {/* SECTION 9: FHIR & NHCX VIEWER */}
         <section id="fhir" className="scroll-mt-8 space-y-6 pb-16">
           <div className="border-b border-slate-200 pb-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">Stage 10 — Interoperability Standards</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">Interoperability Standards</span>
             <h2 className="text-3xl font-extrabold text-slate-900 mt-2">HL7 FHIR R4 & NHCX Interoperability Viewer</h2>
             <p className="text-slate-600 text-sm mt-1">Standardized electronic claim and eligibility payloads compliant with NRCeS ABDM standards.</p>
           </div>
@@ -930,7 +1089,7 @@ export default function SinglePageApp() {
   "status": "active",
   "purpose": ["benefits", "validation"],
   "patient": {
-    "reference": "Patient/ABHA-91-8273-1928-1144"
+    "reference": `Patient/ABHA-${patientAbha}`
   },
   "insurer": {
     "display": policy?.insurer || "Star Health and Allied Insurance"
