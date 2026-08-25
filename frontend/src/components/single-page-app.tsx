@@ -168,7 +168,8 @@ export default function PatientFirstHospitality() {
   const fetchMatchingHospitals = async () => {
     setFetchingHospitals(true)
     try {
-      const res = await fetch("http://localhost:8000/api/v1/matching/hospitals", {
+      const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api/v1"
+      const res = await fetch(`${apiBase}/matching/hospitals`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
